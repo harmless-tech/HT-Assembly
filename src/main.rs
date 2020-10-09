@@ -1,3 +1,8 @@
+mod logging;
+mod test;
+
+use log::{debug, error, info, trace, warn};
+
 fn main() {
-	println!("Hello!");
+    info!("Starting HTA!");
 }
