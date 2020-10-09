@@ -109,6 +109,9 @@ version = "0.0.1"
 [[package]]
 name = "hta_shared"
 version = "0.0.1"
+dependencies = [
+ "log",
+]
 
 [[package]]
 name = "humantime"

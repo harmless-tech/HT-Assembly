@@ -5,10 +5,17 @@ use log4rs::{
     encode::pattern::PatternEncoder
 };
 
+use hta_shared::file_io;
+
 const LOG_PATH: &str = "logs/hta.log";
 
 pub fn setup_log() -> log4rs::Handle {
-    //TODO Cleanup needed.
+    // Cleanup
+    let cleanup_log: bool;
+    match file_io::delete_file(LOG_PATH) {
+        Ok(_) => cleanup_log = true,
+        Err(_) => cleanup_log = false
+    }
 
     // Setup
     let stdout: ConsoleAppender = ConsoleAppender::builder()
@@ -43,6 +50,13 @@ pub fn setup_log() -> log4rs::Handle {
         .unwrap();
 
     let handle: log4rs::Handle = log4rs::init_config(config).unwrap();
+
+    if cleanup_log {
+        info!("Previous log file deleted.")
+    }
+    else {
+        warn!("Previous log file could not be deleted. This could become a problem if the log file gets very long.")
+    }
 
     return handle;
 }
