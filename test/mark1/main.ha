@@ -1,0 +1,60 @@
+//#class Main - Not in milestone1!
+//#include structs.has - Not in milestone1!
+//#include templates.hat - Not in milestone1!
+
+/*
+ * Three registers for milestone1. op1, op2, return.
+ * TODO Types rename to shorten??
+ * Types: char, string, int8, int16, int32 (int), int64, uint8, uint16, uint32 (uint), uint64, float32, float64 (float), byte (uint8), boolean, object, void.
+ * Types (shortened): chr, str, i8, i16, i32 (int), i64, u8, u16, u32 (uint), u64, f32, f64 (float), byte (u8), bool, obj, void.
+ * TODO Allow for arrays, tuples, matrices, and other data structures. (Milestone 3??)
+ * Cannot load data into return register.
+ * Optional semi-colon at end of some lines.
+ */
+
+// tag: :: A position tag.
+
+// alloc NAME TYPE DEFAULT_DATA(OPTIONAL)
+// setvar NAME DATA
+// regvar NAME :: Uses the return register to set the var.
+
+// setreg REG TYPE DEFAULT_DATA(OPTIONAL)
+// varreg NAME REG :: Loads a variable into a op register.
+// cpyreg REG :: Moves return register to another register.
+
+// op OP :: Does a operation on the two operation registers and puts the computed value into the return register.
+/* Operations:
+ *   Logic: NOT, AND, OR, XOR
+ *   Arith: MOD, MUL, DIV, PLUS, MIN
+ *   Rel: EQUAL, NOT_EQUAL, GREATER, LESS, GREATER_EQUAL, LESS_EQUAL
+ *   Bit: (Not in milestone 1!!)
+ */
+
+// pushjmp TAG NAME(OPTIONAL) :: Jumps to a tag if the return register or the optional variable is true.
+// popjmp :: Returns to the position +1 before the jump happened.
+// loop TAG NAME(OPTIONAL) :: Loops to a tag if the return register or the optional variable is true.
+
+// cast RV_FLAG REG/NAME NEW_TYPE :: Attempts to cast value, may not work in milestone1.
+// native NATIVE_NAME (OPTIONAL ARGS) :: Calls a native method. (May not work in milestone1)
+// exit CONSTANT_INT :: Ends the script with a return value.
+
+// createframe !!Later milestone!!
+// discardframe !!Later milestone!!
+
+start:
+    alloc hello str "Hello, World!";
+    set hello "Howdy!";
+
+    setreg 0 int 100;
+    setreg 1 int 101;
+    op +;
+    regvar hello;
+
+part2:
+    alloc hello3 str "Hello, World!"
+    set hello3 "Howdy!"
+
+    setreg 0 int 100
+    setreg 1 int 101
+    op +
+    regvar hello3
