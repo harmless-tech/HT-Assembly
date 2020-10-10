@@ -3,7 +3,7 @@ use std::{
     io::{prelude::*, BufReader, Result}
 };
 
-use log::{error};
+use log::error;
 
 pub fn import_file(location: &str) -> String {
     let file: Result<File> = File::open(location);

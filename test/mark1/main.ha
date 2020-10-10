@@ -36,7 +36,8 @@
 
 // cast RV_FLAG REG/NAME NEW_TYPE :: Attempts to cast value, may not work in milestone1.
 // native NATIVE_NAME (OPTIONAL ARGS) :: Calls a native method. (May not work in milestone1)
-// exit CONSTANT_INT :: Ends the script with a return value.
+// return NAME(OPTIONAL) :: Returns a value. (Not in milestone1) (May merge with exit)
+// exit CONSTANT_INT :: Ends the script with a exit code.
 
 // createframe !!Later milestone!!
 // discardframe !!Later milestone!!

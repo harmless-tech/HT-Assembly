@@ -1,3 +1,4 @@
+//TODO Tests might all be run on the bin.
 #[cfg(test)]
 mod tests {
 
