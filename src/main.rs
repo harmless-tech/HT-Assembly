@@ -24,8 +24,7 @@ fn main() {
 
     // Args
     let args: Vec<String> = env::args().collect();
-    debug!("{}", args.len());
-    debug!("{}", args.join(", "));
+    debug!("Entry Args: {}", args.join(", "));
     match args.len() {
         //TODO TEST Might need to switch back to 2.
         3 => {
@@ -47,13 +46,10 @@ fn main() {
 
 //TODO Return a compiled file!
 fn compile(location: &str) {
-    let mut file: String = file_io::import_file(location);
+    let file: String = file_io::import_file(location);
     if file.eq("") {
         process::exit(1); //CODE 1: File to compile was empty or not found.
     }
-
-    info!("Got file:"); //TODO Remove!
-    info!("{}\n", file);
 
     hta_compile::compile(file.as_str());
 }

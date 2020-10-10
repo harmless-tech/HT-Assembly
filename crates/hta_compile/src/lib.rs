@@ -1,7 +1,5 @@
 mod test;
 
-use std::ops::Index;
-
 use log::debug;
 
 //TODO Needs a return.
@@ -10,11 +8,14 @@ pub fn compile<'a>(content: &str) {
     let mut lines: Vec<String> = str.split("\n").map(|s| String::from(s.trim())).collect();
 
     remove_comments_and_lines(&mut lines);
+    remove_semi_colon(&mut lines);
+
+    lines.iter().for_each(|s| debug!("{}", s))
 }
 
 fn remove_comments_and_lines(lines: &mut Vec<String>) {
     let mut in_comment: bool = false;
-    for mut line in lines.iter_mut() {
+    for line in lines.iter_mut() {
         // Remove // comments.
         let index: Option<usize> = line.find("//");
         if index.is_some() {
@@ -46,4 +47,12 @@ fn remove_comments_and_lines(lines: &mut Vec<String>) {
     }
 
     lines.retain(|s| !s.is_empty());
+}
+
+fn remove_semi_colon(lines: &mut Vec<String>) {
+    lines.iter_mut().for_each(|s| {
+        if s.ends_with(";") {
+            s.remove(s.len() - 1);
+        }
+    });
 }
