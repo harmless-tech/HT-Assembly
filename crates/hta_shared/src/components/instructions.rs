@@ -7,14 +7,16 @@ pub struct Instructions {
 }
 
 pub enum Instruction<T> {
-    Alloc {
+    Alloc { // A variables type will never change.
         name: String,
         hta_type: Type,
         default: Option<T>
     },
     SetVar {
         name: String,
-        hta_type: Type,
-        default: Option<T>
+        data: T
+    },
+    RegVar {
+        name: String
     }
 }

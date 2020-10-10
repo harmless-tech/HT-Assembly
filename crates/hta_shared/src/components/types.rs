@@ -1,4 +1,4 @@
-use std::{fmt, fmt::Formatter};
+use std::{fmt, fmt::Formatter, mem};
 
 #[derive(Debug)]
 pub enum Type {
