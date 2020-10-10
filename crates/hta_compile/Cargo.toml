@@ -8,4 +8,5 @@ license = "MIT License - Copyright (c) 2020 Harmless_Tech"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+hta_shared = { path = "../hta_shared" }
 log = "0.4.11"

@@ -2,13 +2,22 @@ mod test;
 
 use log::debug;
 
+use hta_shared::components::{Instruction, Type};
+
 //TODO Needs a return.
+//TODO Multi-threading compiling.
 pub fn compile<'a>(content: &str) {
     let str: String = String::from(content);
     let mut lines: Vec<String> = str.split("\n").map(|s| String::from(s.trim())).collect();
 
     remove_comments_and_lines(&mut lines);
     remove_semi_colon(&mut lines);
+
+    let instr: Instruction<&str> = Instruction::Alloc {
+        name: String::from("okay"),
+        hta_type: Type::String,
+        default: Option::from("")
+    };
 
     lines.iter().for_each(|s| debug!("{}", s))
 }
@@ -56,3 +65,7 @@ fn remove_semi_colon(lines: &mut Vec<String>) {
         }
     });
 }
+
+fn compile_process() {}
+
+fn compile_line() {}

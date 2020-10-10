@@ -6,15 +6,15 @@ pub struct Instructions {
     arg1: Vec<String>
 }
 
-pub enum Instruction {
+pub enum Instruction<T> {
     Alloc {
         name: String,
         hta_type: Type,
-        default: Option<()>
+        default: Option<T>
     },
     SetVar {
         name: String,
         hta_type: Type,
-        default: Option<()>
+        default: Option<T>
     }
 }
