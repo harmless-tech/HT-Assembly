@@ -14,7 +14,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Install Ubuntu Deps
     - uses: actions/checkout@v2
     - name: Build
       run: cargo build --verbose
