@@ -6,4 +6,3 @@ target/
 logs/
 
 crates/*/target/
-crates/*/Cargo.lock
