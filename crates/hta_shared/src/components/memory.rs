@@ -1,23 +1,23 @@
-use std::mem::size_of;
+use std::{any::Any, borrow::Borrow, mem::size_of};
 
 use crate::components::Type;
-use std::borrow::Borrow;
 
 //TODO Switch to ! operator?? (When available)
-pub struct TypedData<'a> {
+pub struct TypedData {
     hta_type: Type,
-    data: &'a [u8],
+    data: dyn Any
 }
 
 pub struct Register<'a> {
-    reg1: &'a TypedData<'a>,
-    reg2: &'a TypedData<'a>,
-    reg_return: &'a TypedData<'a>,
+    reg1: &'a TypedData,
+    reg2: &'a TypedData,
+    reg_return: &'a TypedData
 }
 
 pub struct InstructionalMemory {}
 
 /* --- To Bytes --- */
+//TODO REMOVE Just use this without the trait.
 trait Byte {
     fn to_bytes(&self) -> Vec<u8>;
     //fn from_bytes(&self, data: &[u8]) -> Self;

@@ -2,8 +2,10 @@ mod test;
 
 use log::debug;
 
-use hta_shared::components::{Instruction, Type};
-use hta_shared::components;
+use hta_shared::{
+    components,
+    components::{Instruction, Type}
+};
 
 //TODO Needs a return.
 //TODO Multi-threading compiling.

@@ -5,8 +5,8 @@
 /*
  * Three registers for milestone1. op1, op2, return.
  * TODO Types rename to shorten??
- * Types: char, string, int8, int16, int32 (int), int64, uint8, uint16, uint32 (uint), uint64, float32, float64 (float), byte (uint8), boolean, object, void.
- * Types (shortened): chr, str, i8, i16, i32 (int), i64, u8, u16, u32 (uint), u64, f32, f64 (float), byte (u8), bool, obj, void.
+ * Types: char, string, int8, int16, int32 (int), int64, i128, uint8, uint16, uint32 (uint), uint64, uint128, float32, float64 (float), byte (uint8), boolean, object, void.
+ * Types (shortened): chr, str, i8, i16, i32 (int), i64, i128, u8, u16, u32 (uint), u64, u128, f32, f64 (float), byte (u8), bool, obj, void.
  * TODO Allow for arrays, tuples, matrices, and other data structures. (Milestone 3??)
  * Cannot load data into return register.
  * Optional semi-colon at end of some lines.
@@ -41,13 +41,14 @@
 
 // createframe !!Later milestone!!
 // discardframe !!Later milestone!!
+// assert !!Later milestone!!
 
 start:
     alloc hello str "Hello, World!";
     set hello "Howdy!";
 
     setreg 0 int 100;
-    setreg 1 int 101;
+    setreg r1 int 101; // Can do either just a number or rNUM, for registers.
     op +;
     regvar hello;
 
