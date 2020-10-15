@@ -4,6 +4,7 @@
 
 /*
  * Three registers for milestone1. op1, op2, return.
+ * TODO (Later Milestone) Bitwise operations.
  * TODO Types rename to shorten??
  * Types: char, string, int8, int16, int32 (int), int64, i128, uint8, uint16, uint32 (uint), uint64, uint128, float32, float64 (float), byte (uint8), boolean, object, void.
  * Types (shortened): chr, str, i8, i16, i32 (int), i64, i128, u8, u16, u32 (uint), u64, u128, f32, f64 (float), byte (u8), bool, obj, void.
@@ -12,7 +13,7 @@
  * Optional semi-colon at end of some lines.
  */
 
-// tag: :: A position tag.
+// NAME: :: A position tag.
 
 // alloc NAME TYPE DEFAULT_DATA(OPTIONAL)
 // setvar NAME DATA
@@ -25,9 +26,9 @@
 // op OP :: Does a operation on the two operation registers and puts the computed value into the return register.
 /* Operations:
  *   Logic: NOT, AND, OR, XOR
- *   Arith: MOD, MUL, DIV, PLUS, MIN
+ *   Arith: MOD, MUL, DIV, PLUS, MINUS
  *   Rel: EQUAL, NOT_EQUAL, GREATER, LESS, GREATER_EQUAL, LESS_EQUAL
- *   Bit: (Not in milestone 1!!)
+ *   TODO Bit: (Not in milestone 1!!)
  */
 
 // pushjmp TAG NAME(OPTIONAL) :: Jumps to a tag if the return register or the optional variable is true.

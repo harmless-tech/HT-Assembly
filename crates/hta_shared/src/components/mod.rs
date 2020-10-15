@@ -1,7 +1,7 @@
 pub use self::{
     instructions::{Instruction, Instructions},
     memory::Register,
-    types::{Type, Registers}
+    types::{Registers, Type, Operations}
 };
 
 mod instructions;
