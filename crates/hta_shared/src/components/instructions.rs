@@ -1,6 +1,6 @@
 use std::any::Any;
 
-use crate::components::{Registers, Type, Operations};
+use crate::components::{Operations, Registers, Type};
 
 //TODO Const strings for values.
 
@@ -15,11 +15,11 @@ pub enum Instruction {
         // A variables type will never change.
         name: String,
         hta_type: Type,
-        default: Option<dyn Any>
+        default: Option<Box<dyn Any>>
     },
     SetVar {
         name: String,
-        data: dyn Any
+        data: Box<dyn Any>
     },
     RegVar {
         name: String
@@ -27,7 +27,7 @@ pub enum Instruction {
     SetReg {
         register: Registers,
         hta_type: Type,
-        default: Option<dyn Any>
+        default: Option<Box<dyn Any>>
     },
     VarReg {
         name: String,
@@ -42,12 +42,12 @@ pub enum Instruction {
     PushJmp {
         //TODO Not very safe in milestone 1. Pushes are required to be popped manually.
         tag: String,
-        name: Option<dyn Any>
+        name: Option<Box<dyn Any>>
     },
     PopJmp,
     Loop {
         tag: String,
-        name: Option<dyn Any>
+        name: Option<Box<dyn Any>>
     },
     Cast {
         register: Registers,
@@ -55,7 +55,7 @@ pub enum Instruction {
     },
     Native {
         native_name: String, //TODO Change to something else.
-        args: Vec<dyn Any>
+        args: Vec<Box<dyn Any>>
     },
     Return, //TODO Not in milestone1!!!
     Exit {

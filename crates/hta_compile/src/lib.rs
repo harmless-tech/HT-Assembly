@@ -16,13 +16,9 @@ pub fn compile<'a>(content: &str) {
     remove_comments_and_lines(&mut lines);
     remove_semi_colon(&mut lines);
 
-    let instr: Instruction<&str> = Instruction::Alloc {
-        name: String::from("okay"),
-        hta_type: Type::String,
-        default: Option::from("")
-    };
-
-    lines.iter().for_each(|s| debug!("{}", s))
+    debug!("START Imported file:");
+    lines.iter().for_each(|s| debug!("{}", s));
+    debug!("END Imported file:");
 }
 
 fn remove_comments_and_lines(lines: &mut Vec<String>) {

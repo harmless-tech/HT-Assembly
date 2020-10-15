@@ -79,8 +79,7 @@ impl Type {
 
 pub enum Registers {
     R0 = 0x0000,
-    R1 = 0x0001
-    //RReturn = 0x0002 - Return register is readonly anyways, so it does not need a value.
+    R1 = 0x0001 //RReturn = 0x0002 - Return register is readonly anyways, so it does not need a value.
 }
 impl Registers {
     fn get(val: &str) -> Option<Self> {
@@ -94,8 +93,7 @@ impl Registers {
     fn value(&self) -> String {
         match self {
             Registers::R0 => String::from("r0"),
-            Registers::R1 => String::from("r1")
-            //Registers::RReturn => String::from("rreturn")
+            Registers::R1 => String::from("r1") //Registers::RReturn => String::from("rreturn")
         }
     }
 }
@@ -119,7 +117,7 @@ pub enum Operations {
     Less = 0x000c,         // <
     GreaterEqual = 0x000d, // >=
     LessEqual = 0x0000e    // <=
-    // Bitwise TODO Bitwise ops.
+                           // Bitwise TODO Bitwise ops.
 }
 impl Operations {
     fn get(val: &str) -> Option<Self> {
