@@ -24,18 +24,19 @@
 // cpyreg REG :: Moves return register to another register.
 
 // op OP :: Does a operation on the two operation registers and puts the computed value into the return register.
-/* Operations:
+/* TODO Operations with two different types are not supported.
+ * Operations:
  *   Logic: NOT, AND, OR, XOR
  *   Arith: MOD, MUL, DIV, PLUS, MINUS
  *   Rel: EQUAL, NOT_EQUAL, GREATER, LESS, GREATER_EQUAL, LESS_EQUAL
- *   TODO Bit: (Not in milestone 1!!)
+ *   TODO BitWise: (Not in milestone 1!!)
  */
 
 // pushjmp TAG NAME(OPTIONAL) :: Jumps to a tag if the return register or the optional variable is true.
 // popjmp :: Returns to the position +1 before the jump happened.
 // loop TAG NAME(OPTIONAL) :: Loops to a tag if the return register or the optional variable is true.
 
-// cast RV_FLAG REG/NAME NEW_TYPE :: Attempts to cast value, may not work in milestone1.
+// cast REG NEW_TYPE :: Attempts to cast value and puts it into the return register. TODO may not work in milestone1.
 // native NATIVE_NAME (OPTIONAL ARGS) :: Calls a native method. (May not work in milestone1)
 // return NAME(OPTIONAL) :: Returns a value. (Not in milestone1) (May merge with exit)
 // exit CONSTANT_INT :: Ends the script with a exit code.

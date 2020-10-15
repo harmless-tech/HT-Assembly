@@ -1,5 +1,7 @@
 use std::mem;
 
+//TODO Const string for values.
+
 pub enum Type {
     Char = 0x0000,   // chr
     String = 0x0001, // str
