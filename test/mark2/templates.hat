@@ -1,0 +1,14 @@
+// !!! Not based off of milestone 2 goals yet !!!
+
+#templates Templates
+#include structs.has
+
+// Not in milestone 1.
+// Only one of these files in the project for milestone 2!
+// params -> return
+
+#template onStart
+void -> int
+
+#template onUpdate
+UpdateData data -> void

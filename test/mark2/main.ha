@@ -1,3 +1,5 @@
+// !!! Not based off of milestone 2 goals yet !!!
+
 //#class Main - Not in milestone1!
 //#include structs.has - Not in milestone1!
 //#include templates.hat - Not in milestone1!
