@@ -1,6 +1,6 @@
 mod test;
 
-use std::iter::Map;
+use std::{any::Any, collections::HashMap, iter::Map};
 
 use log::{debug, error};
 
@@ -9,7 +9,6 @@ use hta_shared::{
     components::{Instructions, Types},
     hta_database::{HTADatabase, HTAFrame}
 };
-use std::{any::Any, collections::HashMap};
 
 //TODO Needs a return.
 //TODO Multi-threading compiling. Multiple files compiling.

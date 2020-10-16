@@ -2,6 +2,7 @@ use std::mem;
 
 //TODO Const string for values.
 
+#[derive(Debug)]
 pub enum Types {
     Char = 0x0000,   // chr
     String = 0x0001, // str
@@ -77,6 +78,7 @@ impl Types {
     }
 }
 
+#[derive(Debug)]
 pub enum Registers {
     R0 = 0x0000,
     R1 = 0x0001 //RReturn = 0x0002 - Return register is readonly anyways, so it does not need a value.
@@ -98,6 +100,7 @@ impl Registers {
     }
 }
 
+#[derive(Debug)]
 pub enum Operations {
     // Logic
     Not = 0x0000, // !

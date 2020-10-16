@@ -4,6 +4,7 @@ use crate::components::{Operations, Registers, Types};
 
 //TODO Const strings for values.
 
+#[derive(Debug)]
 pub enum Instructions {
     Alloc {
         // A variables type will never change.

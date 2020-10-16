@@ -1,12 +1,11 @@
 mod logging;
 mod tests;
 
+use log::{debug, error, info, trace, warn};
 use std::{env, process};
 
 use crate::logging::setup_log;
-use log::{debug, error, info, trace, warn};
-
-use hta_shared::file_io;
+use hta_shared::{file_io, hta_database::HTADatabase};
 
 /*
  * Commands:
@@ -52,7 +51,8 @@ fn compile(location: &str) {
         process::exit(1); //CODE 1: File to compile was empty or not found.
     }
 
-    hta_compile::compile(file.as_str());
+    let data: HTADatabase = hta_compile::compile(file.as_str());
+    debug!("{:#?}", data); //TODO Remove this.
 }
 
 fn run() {}
