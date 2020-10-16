@@ -116,7 +116,28 @@ fn compile_line(line: &str) -> Instructions {
         return Instructions::Blank;
     }
 
-    match args.get(0).unwrap().to_lowercase() {
+    //TODO More safety when collecting args.
+    match args.get(0).unwrap().to_lowercase().as_str() {
+        "alloc" => {
+            return Instructions::Alloc {
+                name: String::from(*args.get(1).unwrap()),
+                hta_type: Types::get(args.get(2).unwrap()).unwrap(),
+                default: None //TODO Later. Allow for default vals.
+            };
+        },
+        "setvar" => {},
+        "regvar" => {},
+        "setreg" => {},
+        "varreg" => {},
+        "cpyreg" => {},
+        "op" => {},
+        "pushjmp" => {},
+        "popjmp" => {},
+        "loop" => {},
+        "cast" => {},
+        "native" => {},
+        "return" => error!("Instruction \"return\" is not implemented yet."),
+        "exit" => {},
         _ => error!("Unknown instruction: {}", line)
     }
 

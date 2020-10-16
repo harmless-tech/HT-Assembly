@@ -28,7 +28,7 @@ pub enum Types {
                       //TODO Pointer type?? Arrays??
 }
 impl Types {
-    fn get(val: &str) -> Option<Self> {
+    pub fn get(val: &str) -> Option<Self> {
         match val.to_lowercase().as_str() {
             "chr" => Option::Some(Types::Char),
             "str" => Option::Some(Types::String),
@@ -84,7 +84,7 @@ pub enum Registers {
     R1 = 0x0001 //RReturn = 0x0002 - Return register is readonly anyways, so it does not need a value.
 }
 impl Registers {
-    fn get(val: &str) -> Option<Self> {
+    pub fn get(val: &str) -> Option<Self> {
         match val.to_lowercase().as_str() {
             "r0" | "0" => Option::Some(Registers::R0),
             "r1" | "1" => Option::Some(Registers::R1),
@@ -123,7 +123,7 @@ pub enum Operations {
                            // Bitwise TODO Bitwise ops.
 }
 impl Operations {
-    fn get(val: &str) -> Option<Self> {
+    pub fn get(val: &str) -> Option<Self> {
         match val.to_lowercase().as_str() {
             "!" => Option::Some(Operations::Not),
             "&&" => Option::Some(Operations::And),
