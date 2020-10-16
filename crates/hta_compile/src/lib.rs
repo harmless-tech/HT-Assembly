@@ -1,15 +1,19 @@
 mod test;
 
-use log::debug;
+use std::iter::Map;
+
+use log::{debug, error};
 
 use hta_shared::{
     components,
-    components::{Instruction, Type}
+    components::{Instructions, Types},
+    hta_database::{HTADatabase, HTAFrame}
 };
+use std::{any::Any, collections::HashMap};
 
 //TODO Needs a return.
-//TODO Multi-threading compiling.
-pub fn compile<'a>(content: &str) {
+//TODO Multi-threading compiling. Multiple files compiling.
+pub fn compile<'a>(content: &str) -> HTADatabase {
     let str: String = String::from(content);
     let mut lines: Vec<String> = str.split("\n").map(|s| String::from(s.trim())).collect();
 
@@ -19,7 +23,22 @@ pub fn compile<'a>(content: &str) {
     debug!("START Imported file:");
     lines.iter().for_each(|s| debug!("{}", s));
     debug!("END Imported file:");
+
+    //TODO When multiple files are compile do linking check!
+    let mut map: HashMap<String, HTAFrame> = HashMap::new();
+
+    //TODO Allow for renaming of init files. Allow for multiple files.
+    map.insert("main".to_string(), compile_process(&lines));
+
+    return HTADatabase {
+        entry_frame: String::from("main"),
+        frames: map
+    };
 }
+
+//TODO This function will do linking checks for the multiple files.
+//TODO Mark2
+fn linker() {}
 
 fn remove_comments_and_lines(lines: &mut Vec<String>) {
     let mut in_comment: bool = false;
@@ -65,6 +84,42 @@ fn remove_semi_colon(lines: &mut Vec<String>) {
     });
 }
 
-fn compile_process() {}
+//TODO Do safety checks!
+fn compile_process(lines: &Vec<String>) -> HTAFrame {
+    let mut instructions: Vec<Instructions> = Vec::new();
+    let mut tags: HashMap<String, u32> = HashMap::new();
+    let vars: HashMap<String, (Types, Box<dyn Any>)> = HashMap::new();
 
-fn compile_line() {}
+    for (i, line) in lines.iter().enumerate() {
+        if line.ends_with(":") {
+            let mut tag: String = line.clone();
+            tag.remove(tag.len() - 1);
+
+            tags.insert(tag, i as u32);
+        }
+
+        let instr: Instructions = compile_line(line);
+        instructions.push(instr);
+    }
+
+    return HTAFrame {
+        instructions,
+        tags,
+        vars
+    };
+}
+
+//TODO Do safety checks!
+fn compile_line(line: &str) -> Instructions {
+    let mut args: Vec<&str> = line.split_whitespace().collect();
+
+    if args.get(0).unwrap().ends_with(":") {
+        return Instructions::Blank;
+    }
+
+    match args.get(0).unwrap().to_lowercase() {
+        _ => error!("Unknown instruction: {}", line)
+    }
+
+    return Instructions::Blank;
+}

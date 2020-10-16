@@ -30,6 +30,7 @@ fn main() {
         3 => {
             if args[1].eq("compile") {
                 compile(args[2].as_str());
+            //TODO Output compiled 'binary'.
             }
             else if args[1].eq("run") {
                 //TODO Get compile result and run it.

@@ -1,20 +1,14 @@
 use std::any::Any;
 
-use crate::components::{Operations, Registers, Type};
+use crate::components::{Operations, Registers, Types};
 
 //TODO Const strings for values.
 
-pub struct Instructions {
-    index: u64,
-    instructions: Vec<String>, //TODO Change
-    arg1: Vec<String>
-}
-
-pub enum Instruction {
+pub enum Instructions {
     Alloc {
         // A variables type will never change.
         name: String,
-        hta_type: Type,
+        hta_type: Types,
         default: Option<Box<dyn Any>>
     },
     SetVar {
@@ -26,7 +20,7 @@ pub enum Instruction {
     },
     SetReg {
         register: Registers,
-        hta_type: Type,
+        hta_type: Types,
         default: Option<Box<dyn Any>>
     },
     VarReg {
@@ -51,7 +45,7 @@ pub enum Instruction {
     },
     Cast {
         register: Registers,
-        hta_type: Type
+        hta_type: Types
     },
     Native {
         native_name: String, //TODO Change to something else.
@@ -60,9 +54,10 @@ pub enum Instruction {
     Return, //TODO Not in milestone1!!!
     Exit {
         code: i32
-    }
+    },
+    Blank // Used for tags.
 }
-impl Instruction {
+/*impl Instructions {
     //TODO get function needs to be changed to account for args.
     /*fn get(val: &str) -> Option<Self> {
         match val.to_lowercase().as_str() {
@@ -70,4 +65,4 @@ impl Instruction {
             _ => Option::None
         }
     }*/
-}
+}*/

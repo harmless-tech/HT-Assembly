@@ -2,7 +2,7 @@ use std::mem;
 
 //TODO Const string for values.
 
-pub enum Type {
+pub enum Types {
     Char = 0x0000,   // chr
     String = 0x0001, // str
     Int8 = 0x0002,   // i8
@@ -26,53 +26,53 @@ pub enum Type {
     Void = 0x0050     // void
                       //TODO Pointer type?? Arrays??
 }
-impl Type {
+impl Types {
     fn get(val: &str) -> Option<Self> {
         match val.to_lowercase().as_str() {
-            "chr" => Option::Some(Type::Char),
-            "str" => Option::Some(Type::String),
-            "i8" => Option::Some(Type::Int8),
-            "i16" => Option::Some(Type::Int16),
-            "i32" | "int" => Option::Some(Type::Int32),
-            "i64" => Option::Some(Type::Int64),
-            "i128" => Option::Some(Type::Int128),
-            "u8" | "byte" => Option::Some(Type::UInt8),
-            "u16" => Option::Some(Type::UInt16),
-            "u32" | "uint" => Option::Some(Type::UInt32),
-            "u64" => Option::Some(Type::UInt64),
-            "u128" => Option::Some(Type::UInt128),
-            "f32" => Option::Some(Type::Float32),
-            "f64" | "float" => Option::Some(Type::Float64),
-            "bool" => Option::Some(Type::Boolean),
-            "obj" => Option::Some(Type::Object),
-            "void" => Option::Some(Type::Void),
+            "chr" => Option::Some(Types::Char),
+            "str" => Option::Some(Types::String),
+            "i8" => Option::Some(Types::Int8),
+            "i16" => Option::Some(Types::Int16),
+            "i32" | "int" => Option::Some(Types::Int32),
+            "i64" => Option::Some(Types::Int64),
+            "i128" => Option::Some(Types::Int128),
+            "u8" | "byte" => Option::Some(Types::UInt8),
+            "u16" => Option::Some(Types::UInt16),
+            "u32" | "uint" => Option::Some(Types::UInt32),
+            "u64" => Option::Some(Types::UInt64),
+            "u128" => Option::Some(Types::UInt128),
+            "f32" => Option::Some(Types::Float32),
+            "f64" | "float" => Option::Some(Types::Float64),
+            "bool" => Option::Some(Types::Boolean),
+            "obj" => Option::Some(Types::Object),
+            "void" => Option::Some(Types::Void),
             _ => Option::None
         }
     }
 
     fn value(&self) -> String {
         match self {
-            Type::Char => String::from("chr"),
-            Type::String => String::from("str"),
-            Type::Int8 => String::from("i8"),
-            Type::Int16 => String::from("i16"),
-            Type::Int32 => String::from("i32"),
-            Type::Int64 => String::from("i64"),
-            Type::Int128 => String::from("i128"),
+            Types::Char => String::from("chr"),
+            Types::String => String::from("str"),
+            Types::Int8 => String::from("i8"),
+            Types::Int16 => String::from("i16"),
+            Types::Int32 => String::from("i32"),
+            Types::Int64 => String::from("i64"),
+            Types::Int128 => String::from("i128"),
             //Type::Int => String::from("int"),
-            Type::UInt8 => String::from("u8"),
-            Type::UInt16 => String::from("u16"),
-            Type::UInt32 => String::from("u32"),
-            Type::UInt64 => String::from("u64"),
-            Type::UInt128 => String::from("u128"),
+            Types::UInt8 => String::from("u8"),
+            Types::UInt16 => String::from("u16"),
+            Types::UInt32 => String::from("u32"),
+            Types::UInt64 => String::from("u64"),
+            Types::UInt128 => String::from("u128"),
             //Type::UInt => String::from("uint"),
-            Type::Float32 => String::from("f32"),
-            Type::Float64 => String::from("f64"),
+            Types::Float32 => String::from("f32"),
+            Types::Float64 => String::from("f64"),
             //Type::Float => String::from("float"),
             //Type::Byte => String::from("byte"),
-            Type::Boolean => String::from("bool"),
-            Type::Object => String::from("obj"),
-            Type::Void => String::from("void")
+            Types::Boolean => String::from("bool"),
+            Types::Object => String::from("obj"),
+            Types::Void => String::from("void")
         }
     }
 }
