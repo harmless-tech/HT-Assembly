@@ -48,7 +48,7 @@
 start:
     alloc hello str "Hello, World!";
     alloc hello2 chr 'H';
-    set hello "Howdy!";
+    setvar hello "Howdy!";
 
     setreg 0 int 100;
     setreg r1 int 101; // Can do either just a number or rNUM, for registers.
@@ -57,7 +57,7 @@ start:
 
 part2:
     alloc hello3 str "Hello, World!"
-    set hello3 "Howdy!"
+    setvar hello3 "Howdy!"
 
     setreg 0 int 100
     setreg 1 int 101

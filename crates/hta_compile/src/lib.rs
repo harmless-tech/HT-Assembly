@@ -1,14 +1,16 @@
+mod arg_crafter;
 mod test;
 
 use std::{any::Any, collections::HashMap, iter::Map};
-
-use log::{debug, error};
 
 use hta_shared::{
     components,
     components::{Instructions, Types},
     hta_database::{HTADatabase, HTAFrame}
 };
+use log::{debug, error};
+
+//use crate::arg_crafter as ac;
 
 //TODO Needs a return.
 //TODO Multi-threading compiling. Multiple files compiling.
@@ -117,29 +119,51 @@ fn compile_line(line: &str) -> Instructions {
     }
 
     //TODO More safety when collecting args.
-    match args.get(0).unwrap().to_lowercase().as_str() {
-        "alloc" => {
-            return Instructions::Alloc {
-                name: String::from(*args.get(1).unwrap()),
-                hta_type: Types::get(args.get(2).unwrap()).unwrap(),
-                default: None //TODO Later. Allow for default vals.
-            };
+    //TODO Proper collection of args.
+    //TODO Keep track of alloc vars and cast setvar to their type.
+    return match args.get(0).unwrap().to_lowercase().as_str() {
+        "alloc" => Instructions::Alloc {
+            name: arg_crafter::arg_name(&args, 1),
+            hta_type: arg_crafter::arg_hta_type(&args, 2),
+            default: None //TODO Later. Allow for default vals.
         },
-        "setvar" => {},
-        "regvar" => {},
-        "setreg" => {},
-        "varreg" => {},
-        "cpyreg" => {},
-        "op" => {},
-        "pushjmp" => {},
-        "popjmp" => {},
-        "loop" => {},
-        "cast" => {},
-        "native" => {},
-        "return" => error!("Instruction \"return\" is not implemented yet."),
-        "exit" => {},
-        _ => error!("Unknown instruction: {}", line)
-    }
-
-    return Instructions::Blank;
+        "setvar" => Instructions::SetVar {
+            name: arg_crafter::arg_name(&args, 1),
+            //TODO This data is not correct. Data needs to be cast, before being stored.
+            // Need to find a way to make strings to work.
+            data: Box::from(/*String::from(*args.get(2).unwrap())*/ 12)
+        },
+        "regvar" => Instructions::RegVar {
+            name: arg_crafter::arg_name(&args, 1)
+        },
+        "setreg" => Instructions::SetReg {
+            register: arg_crafter::arg_register(&args, 1),
+            hta_type: arg_crafter::arg_hta_type(&args, 2),
+            default: None //TODO Later.
+        },
+        "varreg" => Instructions::VarReg {
+            name: arg_crafter::arg_name(&args, 1),
+            register: arg_crafter::arg_register(&args, 2)
+        },
+        "cpyreg" => Instructions::CpyReg {
+            register: arg_crafter::arg_register(&args, 1)
+        },
+        "op" => Instructions::Op {
+            operation: arg_crafter::arg_operation(&args, 1)
+        },
+        //"pushjmp" => {}, //TODO Impl.
+        "popjmp" => Instructions::PopJmp,
+        //"loop" => {},   //TODO Impl.
+        //"cast" => {},   //TODO Impl.
+        //"native" => {}, //TODO Impl.
+        //"return" => {}, //TODO Impl.
+        "exit" => Instructions::Exit {
+            code: -1 //TODO Different codes.
+        },
+        _ => {
+            //TODO Not right. No return, end compiler with error.
+            error!("Unknown instruction: {}", line);
+            return Instructions::Blank;
+        }
+    };
 }

@@ -52,7 +52,7 @@ fn compile(location: &str) {
     }
 
     let data: HTADatabase = hta_compile::compile(file.as_str());
-    debug!("{:#?}", data); //TODO Remove this.
+    debug!("Database print out:\n{:#?}", data); //TODO Remove this.
 }
 
 fn run() {}
