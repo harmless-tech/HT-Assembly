@@ -1,10 +1,9 @@
 mod arg_crafter;
 mod test;
 
-use std::{any::Any, collections::HashMap, iter::Map};
+use std::{any::Any, collections::HashMap};
 
 use hta_shared::{
-    components,
     components::{Instructions, Types},
     hta_database::{HTADatabase, HTAFrame}
 };
@@ -112,7 +111,8 @@ fn compile_process(lines: &Vec<String>) -> HTAFrame {
 
 //TODO Do safety checks!
 fn compile_line(line: &str) -> Instructions {
-    let mut args: Vec<&str> = line.split_whitespace().collect();
+    //TODO This doesn't help if the last arg is a string arg.
+    let args: Vec<&str> = line.split_whitespace().collect();
 
     if args.get(0).unwrap().ends_with(":") {
         return Instructions::Blank;

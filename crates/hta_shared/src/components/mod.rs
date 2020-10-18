@@ -4,5 +4,4 @@ pub use self::{
 };
 
 mod instructions;
-mod memory;
 mod types;

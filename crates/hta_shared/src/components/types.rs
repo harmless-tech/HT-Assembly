@@ -1,5 +1,3 @@
-use std::mem;
-
 //TODO Const string for values.
 
 #[derive(Debug)]
@@ -51,7 +49,7 @@ impl Types {
         }
     }
 
-    fn value(&self) -> String {
+    /*fn value(&self) -> String {
         match self {
             Types::Char => String::from("chr"),
             Types::String => String::from("str"),
@@ -75,7 +73,7 @@ impl Types {
             Types::Object => String::from("obj"),
             Types::Void => String::from("void")
         }
-    }
+    }*/
 }
 
 #[derive(Debug)]
@@ -92,12 +90,12 @@ impl Registers {
         }
     }
 
-    fn value(&self) -> String {
+    /*fn value(&self) -> String {
         match self {
             Registers::R0 => String::from("r0"),
             Registers::R1 => String::from("r1") //Registers::RReturn => String::from("rreturn")
         }
-    }
+    }*/
 }
 
 #[derive(Debug)]
@@ -144,7 +142,7 @@ impl Operations {
         }
     }
 
-    fn value(&self) -> String {
+    /*fn value(&self) -> String {
         match self {
             Operations::Not => String::from("!"),
             Operations::And => String::from("&&"),
@@ -162,5 +160,5 @@ impl Operations {
             Operations::GreaterEqual => String::from(">="),
             Operations::LessEqual => String::from("<=")
         }
-    }
+    }*/
 }

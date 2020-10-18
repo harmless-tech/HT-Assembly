@@ -1,4 +1,4 @@
-use std::{any::Any, collections::HashMap, iter::Map};
+use std::{any::Any, collections::HashMap};
 
 use crate::components::{Instructions, Types};
 

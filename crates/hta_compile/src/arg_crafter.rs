@@ -1,5 +1,3 @@
-use std::any::Any;
-
 use hta_shared::components::{Operations, Registers, Types};
 
 //TODO Throw error if name is invalid.
