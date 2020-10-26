@@ -1,5 +1,7 @@
 use hta_shared::components::{Operations, Registers, Types};
 
+//TODO String storage: Some(Box::<Vec<char>>::new("Gamer!".chars().collect()))
+
 //TODO Throw error if name is invalid.
 pub fn arg_name(args: &Vec<&str>, index: usize) -> String {
     return String::from(*args.get(index).unwrap());

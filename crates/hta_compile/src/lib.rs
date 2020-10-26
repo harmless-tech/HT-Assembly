@@ -118,6 +118,14 @@ fn compile_line(line: &str) -> Instructions {
         return Instructions::Blank;
     }
 
+    /* TODO Processing thoughts:
+     * - First, split by whitespace and process command and other non-whitespace args.
+     * - Then, take the whole line and check if the last char is a quote.
+     *   - If the char is a quote collect chars until a second quote is hit. (Account for backslashes later)
+     *   - If the char is not a quote process the arg using the whitespaces to spilt it.
+     * - Check type of arg and create a tuple with types and a ref.
+     */
+
     //TODO More safety when collecting args.
     //TODO Proper collection of args.
     //TODO Keep track of alloc vars and cast setvar to their type.
