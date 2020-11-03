@@ -2,9 +2,4 @@
 .vscode/*
 
 build/
-target/
 logs/
-
-Cargo.lock
-
-crates/*/target/

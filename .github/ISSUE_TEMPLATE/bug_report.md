@@ -24,12 +24,11 @@ Steps to reproduce the behavior:
 <!-- Upload the log has a txt file. If available. -->
 
 **Details:**
-<!-- Your issue will be closed if any of these fields are left empty. -->
+<!-- Your issue could be closed if any of these fields are left empty. -->
 - Commit Version/Release Version:
  - OS: 
  - OS Version: 
- - Rust Version: 
- - Rust Nightly Version: <!-- If using fmt. -->
+ - Cmake Version: 
  - Running Environment: <!-- EX: vscode, cmd, clion -->
  - Args used: NONE
 

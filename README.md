@@ -1,7 +1,9 @@
 # HT-Assembly
 A more advanced assembly language.
 
+### Branch
+This branch is a switch from Rust to C for the compiler and runtime.
+
 ### TODO
-- GitHub testing for libs.
 
 ##### More to come.
