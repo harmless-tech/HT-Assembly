@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <stdarg.h>
 #include <time.h>
-#include <string.h>
 #include "logging.h"
 
 #define FMT_STR "[%s - %s]: "
@@ -33,16 +32,19 @@ void print(const char *tag, const char *format, ...) {
     strftime(s, 50, "%D %H:%M:%S %Z", p);
 
     va_list args;
+    va_list args2;
     va_start(args, format);
+    va_copy(args2, args);
 
     printf(FMT_STR, s, tag);
     vprintf(format, args);
 
     fprintf(file_ptr, FMT_STR, s, tag);
-    vfprintf(file_ptr, format, args); //TODO FIXME Causes a seg fault on linux. (WSL 2) (Unknown reason)
+    vfprintf(file_ptr, format, args2);
     fflush(file_ptr);
 
     va_end(args);
+    va_end(args2);
 }
 
 void close_logger() {

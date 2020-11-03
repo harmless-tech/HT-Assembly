@@ -12,7 +12,6 @@ int main(int argc, char *argv[]) {
 	print(LOG_INFO, "Arg Amount: %d\n", argc);
 	for(int i = 0; i < argc; i++)
         print(LOG_INFO, "Arg %d: %s\n", i, argv[i]);
-
 	//
 
 	print(LOG_DEBUG, "WOW\n");
