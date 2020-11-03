@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdarg.h>
 #include <time.h>
+#include <string.h>
 #include "logging.h"
 
 #define FMT_STR "[%s - %s]: "
@@ -38,7 +39,8 @@ void print(const char *tag, const char *format, ...) {
     vprintf(format, args);
 
     fprintf(file_ptr, FMT_STR, s, tag);
-    vfprintf(file_ptr, format, args);
+    vfprintf(file_ptr, format, args); //TODO FIXME Causes a seg fault on linux. (WSL 2) (Unknown reason)
+    fflush(file_ptr);
 
     va_end(args);
 }
