@@ -2,11 +2,9 @@
 #include <stdlib.h>
 #include <stdarg.h>
 #include <time.h>
-#include <sys/stat.h>
-#include <sys/types.h>
 #include "logging.h"
 
-#define FMT_STR "[%s - %s]: " // Remove \n
+#define FMT_STR "[%s - %s]: "
 
 FILE *file_ptr;
 

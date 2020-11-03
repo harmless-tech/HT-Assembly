@@ -7,7 +7,7 @@
 #define LOG_DEBUG "DEBUG"
 #define LOG_TRACE "TRACE"
 
-void init_logger(); //TODO Allow for path and name later??
+void init_logger(); //TODO Allow for custom path and name later??
 void print(const char *tag, const char *format, ...);
 void close_logger();
 

@@ -16,5 +16,9 @@ int main(int argc, char *argv[]) {
 
 	print(LOG_DEBUG, "WOW\n");
 
+	// Cleanup
+	close_logger();
+	//
+
 	return 0;
 }
