@@ -40,7 +40,8 @@ else()
 endif()
 
 # Exe
-add_executable(ht-assembly src/main.c)
+file(GLOB_RECURSE SOURCES LIST_DIRECTORIES true src/*.h src/*.c)
+add_executable(ht-assembly ${SOURCES})
 
 # Both
 target_link_libraries(ht-assembly PRIVATE unofficial::parson::parson)
