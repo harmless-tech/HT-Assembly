@@ -9,6 +9,8 @@ set(CMAKE_TOOLCHAIN_FILE ${CMAKE_CURRENT_SOURCE_DIR}/vendors/vcpkg/scripts/build
 
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED True)
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 if(WIN32)
 	# Windows
@@ -40,7 +42,7 @@ else()
 endif()
 
 # Exe
-file(GLOB_RECURSE SOURCES LIST_DIRECTORIES true src/*.h src/*.c)
+file(GLOB_RECURSE SOURCES LIST_DIRECTORIES true src/*.h src/*.c src/*cpp)
 add_executable(ht-assembly ${SOURCES})
 
 # Both

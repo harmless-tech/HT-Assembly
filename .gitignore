@@ -2,4 +2,8 @@
 .vscode/*
 
 build/
+cmake-build-debug/
+cmake-build-release/
+
 logs/
+*.log

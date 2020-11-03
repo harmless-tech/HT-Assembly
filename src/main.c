@@ -1,16 +1,20 @@
-#include <stdio.h>
 #include <parson.h>
 #include <binn.h>
 #include <pthread.h>
+#include "hta_shared/logging.h"
 
 int main(int argc, char *argv[]) {
-	printf("Hello!\n");
-	
+    // Logging
+    init_logger();
+    //
+
 	// Args
-	printf("Arg Amount: %d\n", argc);
+	print(LOG_INFO, "Arg Amount: %d\n", argc);
 	for(int i = 0; i < argc; i++)
-		printf("Arg %d: %s\n", i, argv[i]);
+		print(LOG_INFO, "Arg %d: %s\n", i, argv[i]);
 	//
-	
+
+	print(LOG_DEBUG, "WOW\n");
+
 	return 0;
 }
