@@ -6,6 +6,7 @@ use std::{env, process};
 
 use crate::logging::setup_log;
 use hta_shared::{file_io, hta_database::HTADatabase};
+use std::ops::Add;
 
 /*
  * Commands:
@@ -52,7 +53,12 @@ fn compile(location: &str) {
     }
 
     let data: HTADatabase = hta_compile::compile(file.as_str());
-    debug!("Database print out:\n{:#?}", data); //TODO Remove this.
+
+    //TODO Remove!!
+    debug!("Database print out:\n{:#?}", data);
+
+    *data.frames.get("main").unwrap().instructions.get(3).unwrap()
+    //
 }
 
 fn run() {}

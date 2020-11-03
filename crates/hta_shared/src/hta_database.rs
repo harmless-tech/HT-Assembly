@@ -13,5 +13,6 @@ pub struct HTADatabase {
 pub struct HTAFrame {
     pub instructions: Vec<Instructions>,
     pub tags: HashMap<String, u32>,
+	//TODO This should be moved to the runtime.
     pub vars: HashMap<String, (Types, Box<dyn Any>)> // When exit is hit all of these should be thrown away.
 }

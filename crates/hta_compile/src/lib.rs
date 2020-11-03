@@ -110,6 +110,7 @@ fn compile_process(lines: &Vec<String>) -> HTAFrame {
 }
 
 //TODO Do safety checks!
+//TODO Does line get lower cased????
 fn compile_line(line: &str) -> Instructions {
     //TODO This doesn't help if the last arg is a string arg.
     let args: Vec<&str> = line.split_whitespace().collect();
@@ -133,7 +134,7 @@ fn compile_line(line: &str) -> Instructions {
         "alloc" => Instructions::Alloc {
             name: arg_crafter::arg_name(&args, 1),
             hta_type: arg_crafter::arg_hta_type(&args, 2),
-            default: None //TODO Later. Allow for default vals.
+            default: arg_crafter::arg_default(line, &args, 2) //None //TODO Later. Allow for default vals.
         },
         "setvar" => Instructions::SetVar {
             name: arg_crafter::arg_name(&args, 1),

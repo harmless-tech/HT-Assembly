@@ -29,7 +29,7 @@
  *   Logic: NOT, AND, OR, XOR
  *   Arith: MOD, MUL, DIV, PLUS, MINUS
  *   Rel: EQUAL, NOT_EQUAL, GREATER, LESS, GREATER_EQUAL, LESS_EQUAL
- *   TODO BitWise: (Not in milestone 1!!)
+ *   TODO BitWise: (Not in milestone 1!!) BIT_LEFT_SHIFT BIT_RIGHT_SHIFT BIT_OR BIT_AND BIT_XOR
  */
 
 // pushjmp TAG NAME(OPTIONAL) :: Jumps to a tag if the return register or the optional variable is true.
@@ -47,6 +47,7 @@
 
 start:
     alloc hello str "Hello, World!";
+    alloc hello chr 'n';
     alloc hello2 chr 'H';
     setvar hello "Howdy!";
 
