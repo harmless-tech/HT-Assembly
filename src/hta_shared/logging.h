@@ -13,6 +13,7 @@
 
 void init_logger(); //TODO Allow for custom path and name later??
 void print(const char *tag, const char *format, ...);
+void println(const char *tag, const char *format, ...);
 void close_logger();
 
 #endif // LOGGING_H
