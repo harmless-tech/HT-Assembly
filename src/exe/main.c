@@ -2,8 +2,9 @@
 #include <parson.h>
 #include <binn.h>
 #include <pthread.h>
-#include "hta_shared/utils.h"
-#include "hta_shared/logging.h"
+#include "../hta_shared/utils.h"
+#include "../hta_shared/logging.h"
+#include "../hta_compiler/hta_compiler.h"
 
 int main(int argc, char *argv[]) {
     // Logging
@@ -26,6 +27,7 @@ int main(int argc, char *argv[]) {
 	    if(strcmp(arg1, "compile") == 0) {
 	        //TODO Allow for export file name.
 	        println(LOG_INFO, "Compiler launched with %s file.", arg2);
+	        hta_compile(arg2); //TODO Allow export!
 	    }
 	    else if(strcmp(arg1, "run") == 0) {
             println(LOG_INFO, "Running %s.", arg2);

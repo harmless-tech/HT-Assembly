@@ -1,7 +1,10 @@
+#include <stdlib.h>
+
 #ifndef UTILS_H
 #define UTILS_H
 
-#define TEST_ALLOCATION(p) if(p == NULL) { print(LOG_ERROR, "Failed to allocate memory!"); exit(EXIT_FAILURE); }
+#define TEST_ALLOCATION(p, blame) if(p == NULL) \
+	{ println(LOG_ERROR, "Failed to allocate memory! (%s)", blame); exit(EXIT_FAILURE); }
 
 void to_lower(char *arg);
 
