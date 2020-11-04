@@ -2,7 +2,7 @@
  * A simple logger that prints to the console and a file.
  */
 
-#if !defined(LOGGING_H)
+#ifndef LOGGING_H
 #define LOGGING_H
 
 #define LOG_INFO "INFO"

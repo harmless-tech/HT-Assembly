@@ -9,12 +9,13 @@ int main(int argc, char *argv[]) {
     //
 
 	// Args
-	print(LOG_INFO, "Arg Amount: %d\n", argc);
+	print(LOG_DEBUG, "Arg Amount: %d\n", argc);
 	for(int i = 0; i < argc; i++)
-        print(LOG_INFO, "Arg %d: %s\n", i, argv[i]);
+        print(LOG_DEBUG, "Arg %d: %s\n", i, argv[i]);
 	//
 
-	print(LOG_DEBUG, "WOW\n");
+	// Program
+	//
 
 	// Cleanup
 	close_logger();
