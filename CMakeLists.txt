@@ -39,7 +39,7 @@ endif()
 
 # Packages
 find_package(unofficial-parson CONFIG REQUIRED)
-#find_package(binn CONFIG REQUIRED)
+find_package(xxHash CONFIG REQUIRED)
 
 if(WIN32)
 	# Windows
@@ -69,6 +69,9 @@ target_link_libraries(ht-assembly PRIVATE hta-shared)
 
 # Libs
 target_link_libraries(ht-assembly PRIVATE unofficial::parson::parson)
+
+target_link_libraries(ht-assembly PRIVATE xxHash::xxhash)
+target_link_libraries(hta-shared PRIVATE xxHash::xxhash)
 
 find_path(binn_INCLUDE_DIR binn/binn.h)
 find_library(binn_LIBRARY binn)

@@ -1,6 +1,7 @@
 //#class Main - Not in milestone1!
 //#include structs.has - Not in milestone1!
 //#include templates.hat - Not in milestone1!
+//#define CONST_STR "Hello!" - Not in milestone1!
 
 /*
  * Three registers for milestone1. op1, op2, return.
