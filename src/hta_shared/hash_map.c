@@ -1,8 +1,7 @@
 #include <string.h>
-#include <xxhash.h>
 #include "hash_map.h"
 
-#define SEED 63245872362345346
+//#define SEED 63245872362345346
 #define HASH(name) XXH64(name, strlen(name) + 1, 63245872362345346)
 
 static int does_hash_exist(Hash_Map *const map, XXH64_hash_t hash);
@@ -28,14 +27,14 @@ void *hash_map_remove(Hash_Map *const map, char *const name) {
     }
 }
 
-void *get_hash_map_data(Hash_Map *const map, char *const name) {
+void *hash_map_get(Hash_Map *const map, char *const name) {
     if(map != NULL && name != NULL) {
 
     }
 }
 
 static int does_hash_exist(Hash_Map *const map, XXH64_hash_t hash) {
-    Map_Node *node = map->head;
+    Hash_Map_Node *node = map->head;
 
     while(node != NULL) {
         if(node->hash == hash)

@@ -10,10 +10,9 @@ int hta_compile_export(char *file_path, char *export_file_path) {
 
 HTA_Database *hta_compile(char *file_path) {
     HTA_Database *database = malloc(sizeof(HTA_Database));
+    //TODO Should use calloc since memory is planned to be dumped to a file.
     TEST_ALLOCATION(database, "HTA_Database in compiler")
     //init_hta_database(database);
-
-
 
     //TODO
 }

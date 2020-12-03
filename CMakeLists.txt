@@ -6,6 +6,7 @@ set(CMAKE_C_STANDARD_REQUIRED True)
 #set(CMAKE_CXX_STANDARD 11)
 #set(CMAKE_CXX_STANDARD_REQUIRED True)
 
+# Vcpkg
 set(CMAKE_TOOLCHAIN_FILE ${CMAKE_CURRENT_SOURCE_DIR}/vendors/vcpkg/scripts/buildsystems/vcpkg.cmake CACHE STRING "Vcpkg toolchain file")
 if(WIN32)
 	# Windows
@@ -22,6 +23,7 @@ else()
 	message(FATAL_ERROR "Unknown platform.")
 endif()
 
+# Projects
 project(hta-compiler LANGUAGES C VERSION 0.0.1)
 project(hta-runtime LANGUAGES C VERSION 0.0.1)
 project(hta-shared LANGUAGES C VERSION 0.0.1)
@@ -51,15 +53,15 @@ endif()
 
 #TODO Should headers be included in the source files??
 # Internal Libs
-file(GLOB_RECURSE COMPILER_SOURCES LIST_DIRECTORIES true src/hta_compiler/*.c)# src/hta_compiler/*.h)
-file(GLOB_RECURSE RUNTIME_SOURCES LIST_DIRECTORIES true src/hta_runtime/*.c)# src/hta_runtime/*.h)
-file(GLOB_RECURSE SHARED_SOURCES LIST_DIRECTORIES true src/hta_shared/*.c)# src/hta_shared/*.h)
+file(GLOB_RECURSE COMPILER_SOURCES LIST_DIRECTORIES true src/hta_compiler/*.c)
+file(GLOB_RECURSE RUNTIME_SOURCES LIST_DIRECTORIES true src/hta_runtime/*.c)
+file(GLOB_RECURSE SHARED_SOURCES LIST_DIRECTORIES true src/hta_shared/*.c)
 add_library(hta-compiler STATIC ${COMPILER_SOURCES})
 add_library(hta-runtime STATIC ${RUNTIME_SOURCES})
 add_library(hta-shared STATIC ${SHARED_SOURCES})
 
 # Exe
-file(GLOB_RECURSE SOURCES LIST_DIRECTORIES true src/exe/*.c)# src/exe/*.h) #src/*.h src/*.c src/*cpp)
+file(GLOB_RECURSE SOURCES LIST_DIRECTORIES true src/exe/*.c)
 add_executable(ht-assembly ${SOURCES})
 
 # Internal Libs Link
@@ -67,17 +69,22 @@ target_link_libraries(ht-assembly PRIVATE hta-compiler)
 target_link_libraries(ht-assembly PRIVATE hta-runtime)
 target_link_libraries(ht-assembly PRIVATE hta-shared)
 
-# Libs
+# Lib Parson
 target_link_libraries(ht-assembly PRIVATE unofficial::parson::parson)
 
+# Lib Xxhash
+find_path(xxhash_INCLUDE_DIR xxhash.h)
+target_include_directories(hta-compiler PRIVATE ${xxhash_INCLUDE_DIR})
+target_include_directories(hta-runtime PRIVATE ${xxhash_INCLUDE_DIR})
+target_include_directories(hta-shared PRIVATE ${xxhash_INCLUDE_DIR})
 target_link_libraries(ht-assembly PRIVATE xxHash::xxhash)
-target_link_libraries(hta-shared PRIVATE xxHash::xxhash)
 
+# Lib Binn
 find_path(binn_INCLUDE_DIR binn/binn.h)
-find_library(binn_LIBRARY binn)
 target_include_directories(ht-assembly PRIVATE ${binn_INCLUDE_DIR}/binn)
 target_link_libraries(ht-assembly PRIVATE ${binn_LIBRARY})
 
+# Lib Pthread
 if(WIN32)
 	# Windows
 	target_link_libraries(ht-assembly PRIVATE PThreads4W::PThreads4W)
