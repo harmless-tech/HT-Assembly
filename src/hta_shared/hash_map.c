@@ -1,10 +1,11 @@
 #include <string.h>
+#include "stypes.h"
 #include "hash_map.h"
 
 //#define SEED 63245872362345346
-#define HASH(name) XXH64(name, strlen(name) + 1, 63245872362345346)
+#define HASH(name) XXH64_hash_t hash = XXH64(name, strlen(name) + 1, 63245872362345346);
 
-static int does_hash_exist(Hash_Map *const map, XXH64_hash_t hash);
+static bool does_hash_exist(Hash_Map *const map, XXH64_hash_t hash);
 /*static inline XXH64_hash_t hash_string(char *const name);*/
 
 void init_hash_map(Hash_Map *const map) {
@@ -14,9 +15,10 @@ void init_hash_map(Hash_Map *const map) {
 
 void hash_map_insert(Hash_Map *const map, char *const name, void *data) {
     if(map != NULL && name != NULL) {
-        XXH64_hash_t hash = HASH(name);
+        HASH(name)
 
         // Create
+
         // Change
     }
 }
@@ -33,7 +35,7 @@ void *hash_map_get(Hash_Map *const map, char *const name) {
     }
 }
 
-static int does_hash_exist(Hash_Map *const map, XXH64_hash_t hash) {
+static bool does_hash_exist(Hash_Map *const map, XXH64_hash_t hash) {
     Hash_Map_Node *node = map->head;
 
     while(node != NULL) {

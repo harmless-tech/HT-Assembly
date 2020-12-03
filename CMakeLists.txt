@@ -53,15 +53,15 @@ endif()
 
 #TODO Should headers be included in the source files??
 # Internal Libs
-file(GLOB_RECURSE COMPILER_SOURCES LIST_DIRECTORIES true src/hta_compiler/*.c)
-file(GLOB_RECURSE RUNTIME_SOURCES LIST_DIRECTORIES true src/hta_runtime/*.c)
-file(GLOB_RECURSE SHARED_SOURCES LIST_DIRECTORIES true src/hta_shared/*.c)
+file(GLOB_RECURSE COMPILER_SOURCES LIST_DIRECTORIES true src/hta_compiler/*.h src/hta_compiler/*.c)
+file(GLOB_RECURSE RUNTIME_SOURCES LIST_DIRECTORIES true src/hta_runtime/*.h src/hta_runtime/*.c)
+file(GLOB_RECURSE SHARED_SOURCES LIST_DIRECTORIES true src/hta_shared/*.h src/hta_shared/*.c)
 add_library(hta-compiler STATIC ${COMPILER_SOURCES})
 add_library(hta-runtime STATIC ${RUNTIME_SOURCES})
 add_library(hta-shared STATIC ${SHARED_SOURCES})
 
 # Exe
-file(GLOB_RECURSE SOURCES LIST_DIRECTORIES true src/exe/*.c)
+file(GLOB_RECURSE SOURCES LIST_DIRECTORIES true src/exe/*.h src/exe/*.c)
 add_executable(ht-assembly ${SOURCES})
 
 # Internal Libs Link

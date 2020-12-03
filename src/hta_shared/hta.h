@@ -1,7 +1,7 @@
-#include "hash_map.h"
-
 #ifndef HTA_H
 #define HTA_H
+
+#include "hash_map.h"
 
 typedef struct {
     char *entry_frame;
@@ -9,9 +9,9 @@ typedef struct {
 } HTA_Database;
 
 typedef struct {
-    int temp; //TODO Replace.
+    char temp; //TODO Replace.
 } Frame;
 
 void init_hta_database(HTA_Database *database);
 
-#endif //HTA_H
+#endif // HTA_H

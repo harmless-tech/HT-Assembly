@@ -5,9 +5,10 @@
 #include <xxhash.h>
 #include "../hta_shared/utils.h"
 #include "../hta_shared/logging.h"
+#include "../hta_shared/stypes.h"
 #include "../hta_compiler/hta_compiler.h"
 
-int main(int argc, char *argv[]) {
+i32 main(i32 argc, char *argv[]) {
     // Logging
     init_logger();
     println(LOG_INFO, "Starting HTA!");
@@ -15,7 +16,7 @@ int main(int argc, char *argv[]) {
 
 	// Args
 	println(LOG_DEBUG, "Arg Amount: %d", argc);
-	for(int i = 0; i < argc; i++)
+	for(i32 i = 0; i < argc; i++)
         println(LOG_DEBUG, "Arg %d: %s", i, argv[i]);
 	//
 

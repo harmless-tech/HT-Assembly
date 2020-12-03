@@ -1,12 +1,12 @@
-#include <xxhash.h>
-
 #ifndef HASH_MAP_H
 #define HASH_MAP_H
 
-typedef struct node {
+#include <xxhash.h>
+
+typedef struct hash_map_node {
     XXH64_hash_t hash;
     void *data;
-    struct node *next;
+    struct hash_map_node *next;
 } Hash_Map_Node;
 
 typedef struct {
