@@ -1,10 +1,5 @@
 #include <string.h>
-#include <parson.h>
-#include <binn.h>
-#include <pthread.h>
-#include <xxhash.h>
 #include "../hta_shared/utils.h"
-#include "../hta_shared/logging.h"
 #include "../hta_shared/stypes.h"
 #include "../hta_compiler/hta_compiler.h"
 

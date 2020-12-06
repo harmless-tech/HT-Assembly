@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.15)
 # Env Vars
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED True)
+#TODO c++ files too?
 #set(CMAKE_CXX_STANDARD 11)
 #set(CMAKE_CXX_STANDARD_REQUIRED True)
 
@@ -51,7 +52,6 @@ else()
 	find_package(Threads REQUIRED)
 endif()
 
-#TODO Should headers be included in the source files??
 # Internal Libs
 file(GLOB_RECURSE COMPILER_SOURCES LIST_DIRECTORIES true src/hta_compiler/*.h src/hta_compiler/*.c)
 file(GLOB_RECURSE RUNTIME_SOURCES LIST_DIRECTORIES true src/hta_runtime/*.h src/hta_runtime/*.c)
