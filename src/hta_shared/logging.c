@@ -10,6 +10,7 @@ static void print_impl(const char *tag, const char *format, va_list args);
 
 FILE *file_ptr;
 
+//TODO Put the logs in another location?
 void init_logger() {
     // Dir
     system("mkdir logs");
