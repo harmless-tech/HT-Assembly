@@ -6,6 +6,6 @@ Meant to be embedded in other applications.
 - Language planning.
 - Rewrite and re-planning.
 - GitHub testing for libs.
-- GitHub actions for windows/macos and add in rustfmt check.
+- GitHub actions for windows/macos and add in rustfmt check. (https://actions-rs.github.io/)
 
 ##### More to come.

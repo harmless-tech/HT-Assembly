@@ -1,0 +1,3 @@
+#DEFINE file_type structs // Allow only struct defs in this file
+
+#NAMESPACE hts
