@@ -57,13 +57,14 @@ fn compile(location: &str) {
     //TODO Remove!!
     debug!("Database print out:\n{:#?}", data);
 
+    /*
     *data
         .frames
         .get("main")
         .unwrap()
         .instructions
         .get(3)
-        .unwrap()
+        .unwrap()*/
     //
 }
 
