@@ -3,7 +3,7 @@ name: Bug report
 about: Report a bug
 title: ''
 labels: bug
-assignees: 'harmless-tech'
+assignees: ''
 
 ---
 
@@ -21,7 +21,7 @@ Steps to reproduce the behavior:
 <!-- A clear and concise description of what you expected to happen. -->
 
 **Log**
-<!-- Upload the log has a txt file. If available. -->
+<!-- Upload the log as a txt file. If available. -->
 
 **Details:**
 <!-- Your issue will be closed if any of these fields are left empty. -->
