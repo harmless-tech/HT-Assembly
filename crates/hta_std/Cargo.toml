@@ -1,9 +1,9 @@
 [package]
-name = "hta_shared"
+name = "hta_std"
 version = "0.0.1"
 authors = ["Harmless_Tech (harmless-tech)"]
 edition = "2018"
-license = "MIT License - Copyright (c) 2020, 2021 Harmless_Tech"
+license = "MIT License - Copyright (c) 2021 Harmless_Tech"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
