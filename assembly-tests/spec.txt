@@ -26,6 +26,7 @@ Hash Processors start with a #. They must be on their own line, and comments can
   Imposes requirements on the HTA file. Not required, but highly suggested.
     - hta_version VERSION COMPARE[greater, greater_equal, equal] :: COMPILER_VERSION greater_equal :: Sets the required HTA version to run/compile this program. :: #HEADER hta_version 0.0.1 greater
     - file_type TYPES[assembly, structs]                         :: assembly structs               :: Sets the file to only allow certain things.                :: #HEADER file_type assembly
+    - semicolons BOOLEAN                                         :: false                          :: Forces semicolons to be used at the end of code lines.     :: #HEADER semicolons true
   - NAMESPACE NAME :: NAME_OF_FILE :: Sets the namespace to which all tags and vars in the file will have. :: #NAMESPACE ht
   This would add the namespace onto the tags and vars in the file. This allows for them to be accessed from other files.
   - REQUIRE LIB_NAME :: NO DEFAULT :: Tells the runtime to use a library to allow for more syscalls. :: #REQUIRE more_syscalls //TODO Not supported currently.

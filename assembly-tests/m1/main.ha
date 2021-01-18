@@ -8,6 +8,7 @@
 
 #HEADER hta_version 0.0.1 greater_equal // Requires HTA 0.0.1 or higher
 #HEADER file_type assembly
+#HEADER semicolons true
 
 #NAMESPACE ht
 
@@ -17,4 +18,7 @@
 #DEFINE HELLO_STR "Hello there!"
 
 ENTRY: // This tag will be merged with the line below.
-
+    alloc hello str "Hello, World!";
+    syscall std.printf hello;
+    syscall std.printf "\n";
+    exit 0
