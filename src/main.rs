@@ -5,6 +5,7 @@ use log::{debug, error, info, trace, warn};
 use std::{env, process};
 
 use crate::logging::setup_log;
+use std::ops::Add;
 
 //TODO Allow for optional args. (--debug, --binary)
 fn main() {
@@ -29,8 +30,8 @@ fn main() {
                 warn!("Run is not implemented yet!");
             }
             else if args[1].eq_ignore_ascii_case("crun") {
-                //TODO Get compile result and run it.
-                //compile(args[2].as_str());
+                //TODO Arg checking.
+                compile_and_run(args[2].as_str());
                 warn!("Compile and Run is not implemented yet!");
             }
             else {
@@ -43,7 +44,7 @@ fn main() {
 
 fn compile_to_file(hta_file: &str, binary_name: &str) {}
 
-fn compile_run(hta_file: &str) {}
+fn compile_and_run(hta_file: &str) {}
 
 fn run(binary_file: &str) {}
 
