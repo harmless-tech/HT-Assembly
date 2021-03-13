@@ -1,3 +1,5 @@
+pub mod version;
+
 use std::iter::Map;
 
 /**

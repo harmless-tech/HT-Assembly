@@ -1,14 +1,18 @@
 mod crafter;
 
 use log::{debug, error, info, trace, warn};
-use std::{fs, mem};
-use std::fs::File;
-use std::path::{PathBuf};
-use std::io::{Seek, SeekFrom};
-use std::convert::TryInto;
+use std::{
+    convert::TryInto,
+    fs,
+    fs::File,
+    io::{Seek, SeekFrom},
+    mem,
+    path::PathBuf
+};
 
+//TODO Allow custom file name.
 static DEFAULT_PATH: &str = "build/bin/";
-static DEFAULT_FILE: &str = "main.hae";
+static DEFAULT_FILE: &str = "main.hab";
 
 // struct CompileData {}
 
@@ -19,7 +23,7 @@ static DEFAULT_FILE: &str = "main.hae";
 //TODO Returned compiled struct.
 //TODO Support multiple files.
 pub fn compile(hta_file: &str) {
-    /*let compiler_version = */match option_env!("CARGO_PKG_VERSION") {
+    let compiler_version = match option_env!("CARGO_PKG_VERSION") {
         Some(v) => {
             info!("HTA Compiler Version: {}", v);
             v
@@ -36,7 +40,8 @@ pub fn compile(hta_file: &str) {
     {
         use std::io::Write;
         // Header "HTA"
-        let mut file = File::create(PathBuf::from(format!("{}{}", DEFAULT_PATH, DEFAULT_FILE))).unwrap();
+        let mut file =
+            File::create(PathBuf::from(format!("{}{}", DEFAULT_PATH, DEFAULT_FILE))).unwrap();
         file.seek(SeekFrom::Start(0)).unwrap();
 
         let buffer = &["HTA".as_bytes(), &[0_u8; 5]].concat();
@@ -54,7 +59,8 @@ pub fn compile(hta_file: &str) {
     {
         use std::io::Read;
         // Read back file
-        let mut file = File::open(PathBuf::from(format!("{}{}", DEFAULT_PATH, DEFAULT_FILE))).unwrap();
+        let mut file =
+            File::open(PathBuf::from(format!("{}{}", DEFAULT_PATH, DEFAULT_FILE))).unwrap();
         file.seek(SeekFrom::Start(0)).unwrap();
 
         let mut buffer = [0_u8; 256];
@@ -69,10 +75,13 @@ pub fn compile(hta_file: &str) {
         let (int_bytes, _) = buffer.split_at(mem::size_of::<u64>());
         assert_eq!(int_bytes, &(26 as u64).to_be_bytes());
         let chunk_size = u64::from_be_bytes(int_bytes.try_into().unwrap());
-        let mut buffer =  vec![0_u8; chunk_size as usize];
+        let mut buffer = vec![0_u8; chunk_size as usize];
 
         file.by_ref().take(chunk_size).read(&mut buffer).unwrap();
-        assert_eq!(&buffer[0..(chunk_size as usize)], "Test, Harmless_Tech, 0.0.1".as_bytes());
+        assert_eq!(
+            &buffer[0..(chunk_size as usize)],
+            "Test, Harmless_Tech, 0.0.1".as_bytes()
+        );
     }
     //
 

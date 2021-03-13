@@ -2,7 +2,7 @@ mod logging;
 //mod tests; TODO tests.
 
 use log::{debug, error, info, trace, warn};
-use std::{env};
+use std::env;
 
 use crate::logging::setup_log;
 
@@ -37,6 +37,7 @@ fn main() {
             }
             else if args[1].eq_ignore_ascii_case("crun") {
                 //TODO Arg checking.
+                // Compile and then run a binary.
 
                 // compile_and_run(args[2].as_str());
                 warn!("Compile and Run is not implemented yet!");

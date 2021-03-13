@@ -9,8 +9,8 @@
 //TODO Should DEBUG_INFO be injected has readonly struct?
 
 #REQUIRE hta_version 0.0.1 // Requires HTA 0.0.1 or higher
-#REQUIRE semicolons true // Every cmd line must end with a semicolon.
-#REQUIRE std_enable true // Default true
+#REQUIRE semicolons true // Every instruction line must end with a semicolon.
+#REQUIRE std true // Default true. Allows the std library to be used.
 //#REQUIRE file_type assembly // ...IDK
 
 //#NAMESPACE ht
@@ -20,9 +20,20 @@
 
 #DEFINE HELLO_STR "Hello there!"
 
+// For m1 all instructions need to be on their own line.
+
 ENTRY:
       alloc hello str "Hello, World!";
-      syscall std.printf hello;
-      syscall std.printf "\n";
+      alloc hello str HELLO_STR;
+      call std.print hello;
 
-Exit: exit 0;
+NEWLINE:
+
+
+
+      call std.print "\n";
+
+      alloc h_int u32 HELLO_STR;
+      alloc h_float float HELLO_STR;
+
+EXIT: exit 0;
