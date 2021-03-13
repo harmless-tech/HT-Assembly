@@ -5,6 +5,5 @@ build/
 target/
 logs/
 
-Cargo.lock
-
 crates/*/target/
+crates/*/Cargo.lock
