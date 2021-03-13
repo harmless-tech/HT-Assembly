@@ -2,17 +2,23 @@ mod logging;
 //mod tests; TODO tests.
 
 use log::{debug, error, info, trace, warn};
-use std::{env, process};
+use std::{env};
 
 use crate::logging::setup_log;
-use std::ops::Add;
 
 //TODO Allow for optional args. (--debug, --binary)
+//TODO Return a Result!
 fn main() {
     // Logging
     setup_log();
-
-    info!("Starting HTA!");
+    let hta_version = match option_env!("CARGO_PKG_VERSION") {
+        Some(v) => v,
+        None => {
+            error!("No version found for hta defaulting to v0.0.1");
+            "0.0.1"
+        }
+    };
+    info!("Starting HTA! Version: {}", hta_version);
 
     // Args
     let args: Vec<String> = env::args().collect();
@@ -31,7 +37,8 @@ fn main() {
             }
             else if args[1].eq_ignore_ascii_case("crun") {
                 //TODO Arg checking.
-                compile_and_run(args[2].as_str());
+
+                // compile_and_run(args[2].as_str());
                 warn!("Compile and Run is not implemented yet!");
             }
             else {
@@ -40,13 +47,17 @@ fn main() {
         },
         _ => error!("Wrong number of args! Needed 2!")
     }
+
+    //TODO Remove!
+    hta_compile::compile("assembly-tests/m1/main.ha");
+    //
 }
 
-fn compile_to_file(hta_file: &str, binary_name: &str) {}
+// fn compile_to_file(hta_file: &str, binary_name: &str) {}
 
-fn compile_and_run(hta_file: &str) {}
+// fn compile_and_run(hta_file: &str) {}
 
-fn run(binary_file: &str) {}
+// fn run(binary_file: &str) {}
 
 /*fn compile(location: &str) {
     let file: String = file_io::import_file(location);

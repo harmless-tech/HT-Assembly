@@ -1,9 +1,0 @@
-// !!! Not based off of milestone 2 goals yet !!!
-
-#structs Structs
-
-// Not in milestone 1.
-// Only one of these files in the project for milestone 2!
-
-#struct UpdateData
-{string id, float64 time}

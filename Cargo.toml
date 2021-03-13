@@ -1,6 +1,6 @@
 [package]
 name = "hta"
-version = "0.0.1"
+version = "0.0.2"
 authors = ["Harmless_Tech (harmless-tech)"]
 edition = "2018"
 description = "An open source assembly language that uses a runtime."
@@ -24,3 +24,9 @@ log4rs = "1.0.0"
 
 [workspace]
 members = ["crates/*"]
+
+[profile.release]
+opt-level = "z"
+lto = true
+codegen-units = 1
+panic = "abort"
