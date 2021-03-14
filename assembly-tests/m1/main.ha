@@ -34,7 +34,7 @@
 
 ENTRY:
       alloc hello str "Hello, World!";
-      alloc hello str HELLO_STR;
+      alloc hello str HELLO_STR; // This is valid, the var will be reallocated with the type.
       call std.print hello;
 
 NEWLINE:

@@ -50,7 +50,7 @@ fn main() {
     }
 
     //TODO Remove!
-    hta_compile::compile("assembly-tests/m1/main.ha");
+    hta_compile::compile("assembly-tests/m1/main.ha", true);
     //
 }
 

@@ -71,20 +71,19 @@ Commands:
   - regvar NAME                     ::
   - setreg REG TYPE DATA(OPTIONAL)  ::
   - varreg NAME REG                 ::
-  - cpyreg REG                      ::
-  - rreg                            :: Moves $0 to $2.
+  - cpyreg REG REG                  ::
   - op OP                           ::
-  - jmp TAG NAME(OPTIONAL)          :: Jumps if $2 is a true value.
-  - pushjmp TAG NAME(OPTIONAL)      :: Jumps to a
+  - jmp TAG                         :: Jumps if $2 is a true value.
+  - pushjmp TAG                     :: Jumps if $2 is a true value. Saves the jmp point.
   - popjmp                          :: Pops a jmp. Only happens if there is a jmp in the stack.
   - cast NEW_TYPE                   :: Casts $0 to the new type and puts it into $2.
-  - call NATIVE_NAME NATIVE_ARGS    ::
+  - call NATIVE_NAME NATIVE_ARGS    :: NATIVE_ARGS does nothing in m1. For now just passes the register values. Puts something in the return register, if it wants to.
   - exit INT(OPTIONAL)              :: Exits the program with a return code. If there is no return code, exits the program using $2.
-  - assert OPTIONAL_ARG             :: Asserts the return register is equal to the OPTIONAL_ARG, or asserts that the return register is true.
+  - assert OPTIONAL_ARG             :: Asserts the return register is equal to the OPTIONAL_ARG, or asserts that the return register is true. Only in debug builds.
 
 
 Operations:
   - Logic: !, &&, ||
   - Arith: +, -, *, /, %, ++, --
   - Rel: ==, !=, >, <, >=, <=
-  - BitWise: &, |, ^, ~, <<, >> //TODO Bitwise not in m1.
+  - BitWise: &, |, ^, ~, << u64, >> u64 // u64 defaults to 1. //TODO Bitwise not in m1.
