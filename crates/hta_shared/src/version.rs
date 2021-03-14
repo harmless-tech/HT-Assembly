@@ -6,12 +6,12 @@ pub fn is_version_str_ge(v1_str: &str, v2_str: &str) -> Option<bool> {
 
     match (v1, v2) {
         (Some(tup1), Some(tup2)) => Some(is_version_ge(tup1, tup2)),
-        _ => None
+        _ => None,
     }
 }
 
 //TODO This function can be improved.
-pub fn is_version_ge(v1: (u32, u32, u32), v2: (u32, u32, u32)) -> bool {
+pub fn is_version_ge(v1: (u64, u64, u64), v2: (u64, u64, u64)) -> bool {
     if v1.0 > v2.0 {
         return true;
     }
@@ -26,12 +26,12 @@ pub fn is_version_ge(v1: (u32, u32, u32), v2: (u32, u32, u32)) -> bool {
     false
 }
 
-pub fn parse_version_str(v_str: &str) -> Option<(u32, u32, u32)> {
+pub fn parse_version_str(v_str: &str) -> Option<(u64, u64, u64)> {
     let sv: Vec<&str> = v_str.split(".").collect();
     if sv.len() == 3 {
-        let major = u32::from_str(sv.get(0).unwrap());
-        let minor = u32::from_str(sv.get(1).unwrap());
-        let patch = u32::from_str(sv.get(2).unwrap());
+        let major = u64::from_str(sv.get(0).unwrap());
+        let minor = u64::from_str(sv.get(1).unwrap());
+        let patch = u64::from_str(sv.get(2).unwrap());
 
         match (major, minor, patch) {
             (Ok(maj), Ok(min), Ok(pat)) => return Some((maj, min, pat)),

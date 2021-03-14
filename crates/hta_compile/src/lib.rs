@@ -1,6 +1,7 @@
 mod crafter;
 mod writer;
 
+use hta_shared::{version::parse_version_str, DebugData, Instructions, MetaData, Program};
 use log::{debug, error, info, trace, warn};
 use std::{
     convert::TryInto,
@@ -8,11 +9,10 @@ use std::{
     fs::File,
     io::{Seek, SeekFrom},
     mem,
-    path::PathBuf
+    path::PathBuf,
 };
 
-// Steps
-/*
+/* Steps:
  * Take in main file and process info.
  * Take in other files and process info.
  * Make sure files do not import each other.
@@ -22,18 +22,25 @@ use std::{
  */
 
 static BINARY_PATH: &str = "build/bin/";
-
 static DEFAULT_FILE_NAME: &str = "main";
 
+struct WriteData {
+    build_data: (String), // Right now this is just a file name.
+    compiler_version: (u64, u64, u64),
+    debug_data: DebugData,
+    metadata: MetaData,
+    program: Program,
+}
+
 pub fn compile(hta_file: &str, dbg: bool) -> Result<(), String> {
-    let compiler_version = match option_env!("CARGO_PKG_VERSION") {
+    let compiler_version = match parse_version_str(option_env!("CARGO_PKG_VERSION").unwrap()) {
         Some(v) => {
-            info!("HTA Compiler Version: {}", v);
+            info!("HTA Compiler Version: {}.{}.{}", v.0, v.1, v.2);
             v
-        },
+        }
         None => {
             error!("No compiler version found defaulting to v0.0.1");
-            "0.0.1"
+            (0, 0, 1)
         }
     };
 
@@ -46,13 +53,61 @@ pub fn compile(hta_file: &str, dbg: bool) -> Result<(), String> {
     Err("NOT IMPL".to_string())
 }
 
-fn fs_intake(path: &str) -> Result<String, String> {
-    match fs::read_to_string(path) {
-        Ok(str) => Ok(str),
-        Err(_) => Err(format!(
-            "Failed to import file {}. (Compilation Failed)",
-            path
-        ))
+/*
+ * All header are 8 bytes.
+ * All sizes are u64, unless otherwise stated.
+ *
+ * HTA Header
+ *     Compiler Version
+ *         Major
+ *         Minor
+ *         Patch
+ * DBG Header
+ *     Debug Data
+ *         Size of struct
+ *         Struct using bincode
+ * META Header
+ *     Repeat for each piece of data
+ *         Size
+ *         Info
+ *     Amount of Natives
+ *     Repeat
+ *         Native Name
+ * PROGRAM header
+ *     Tag Map
+ *         Amount of Tags
+ *         Repeat
+ *             Tag
+ *             Frame
+ *             Instruction location
+ *     Instructions
+ *         Amount of Frames
+ *         Repeat
+ *             Amount of Instructions
+ *                 Repeat
+ *                 Instruction (u8)
+ *                 Data for instruction (with sizing when needed)
+ * END header
+ *     Any data can be put here, it will be ignored by the runtime.
+ */
+fn write_binary(data: &WriteData) -> Result<(), String> {
+    Instructions::Exit(-1);
+
+    Err("NOT IMPL".to_string())
+}
+
+//TODO Own file?
+mod file {
+    use std::fs;
+
+    pub fn intake(path: &str) -> Result<String, String> {
+        match fs::read_to_string(path) {
+            Ok(str) => Ok(str),
+            Err(_) => Err(format!(
+                "Failed to import file {}. (Compilation Failed)",
+                path
+            )),
+        }
     }
 }
 

@@ -45,8 +45,8 @@ fn main() {
             else {
                 error!("Expected compile, run, or crun!");
             }
-        },
-        _ => error!("Wrong number of args! Needed 2!")
+        }
+        _ => error!("Wrong number of args! Needed 2!"),
     }
 
     //TODO Remove!

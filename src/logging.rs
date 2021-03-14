@@ -2,7 +2,7 @@ use log::{info, warn, LevelFilter};
 use log4rs::{
     append::{console::ConsoleAppender, file::FileAppender},
     config::{Appender, Config, Logger, Root},
-    encode::pattern::PatternEncoder
+    encode::pattern::PatternEncoder,
 };
 use std::fs::remove_file;
 
@@ -14,19 +14,19 @@ pub fn setup_log() -> log4rs::Handle {
     let cleanup_log: bool;
     match remove_file(LOG_PATH) {
         Ok(_) => cleanup_log = true,
-        Err(_) => cleanup_log = false
+        Err(_) => cleanup_log = false,
     }
 
     // Setup
     let stdout: ConsoleAppender = ConsoleAppender::builder()
         .encoder(Box::new(PatternEncoder::new(
-            "{h({d(%H:%M:%S)(local)} - {l}: {m}{n})}"
+            "{h({d(%H:%M:%S)(local)} - {l}: {m}{n})}",
         )))
         .build();
 
     let fileout: FileAppender = FileAppender::builder()
         .encoder(Box::new(PatternEncoder::new(
-            "{h({d(%H:%M:%S)(local)} - {l}: {m}{n})}"
+            "{h({d(%H:%M:%S)(local)} - {l}: {m}{n})}",
         )))
         .build(LOG_PATH)
         .unwrap();
@@ -39,13 +39,13 @@ pub fn setup_log() -> log4rs::Handle {
             Logger::builder()
                 .appender("fileout")
                 .additive(false)
-                .build("app::fileout", LevelFilter::Debug)
+                .build("app::fileout", LevelFilter::Debug),
         )
         .build(
             Root::builder()
                 .appender("stdout")
                 .appender("fileout")
-                .build(LevelFilter::Debug)
+                .build(LevelFilter::Debug),
         )
         .unwrap();
 

@@ -1,4 +1,5 @@
 pub mod hfs;
+mod traits;
 pub mod version;
 
 use serde::{Deserialize, Serialize};
@@ -9,38 +10,10 @@ pub static FILE_EXT_BINARY: &str = ".hab"; // File extension for built binary fi
 pub static DEBUG_FILE_EXT: &str = ".hadbg"; // This will be build into the binary file. TODO Maybe?
 pub static FILE_EXT_SNAPSHOT: &str = ".hasnap"; //TODO Maybe?
 
-/**
- * This struct holds the metadata of the HTA program.
- * This struct is created during compile time and then exported to the binary.
- * The runtime will then read in this data in during program startup.
- * This data is for the runtime only, the program cannot access it.
- */
-#[derive(Clone, Debug)]
-pub struct MetaData {
-    pub name: String,
-    pub authors: Vec<String>,
-    pub version: String,
-    pub website: String,
-    pub git: String,
-    pub license: String //pub custom: Map<String, String> //TODO Add this later. Maybe?
-}
-
-/**
- * This struct holds mappings from the compiled program to the un-compiled program.
- * This is only generated for debug builds.
- */
-#[derive(Clone, Debug, Serialize, Deserialize)]
-pub struct DebugData {
-    pub call_function_mappings: HashMap<u64, String>, // Call Function Hash, Call Function Name
-    pub namespace_mappings: HashMap<u64, String>,     // Namespace Hash, Namespace name
-    pub variable_name_mappings: HashMap<u64, String>, // Namespace + Variable Hash, Namespace + Variable Name
-    pub tag_name_mappings: HashMap<u64, String>,      // Namespace + Tag Hash, Namespace + Tag Name
-    pub line_mappings: HashMap<(u64, u64), String>    // Instruction Frame and Instruction Count, File Name + File Line Number
-}
-
-#[derive(Clone, Debug)]
-pub struct Program {
-}
+type Tag = u64;
+type TagMap = (usize, usize); // Frame, Instruction
+type Variable = u64;
+type NativeName = u64; // This is for the name of the native library and the native function being called
 
 #[derive(Clone, Debug, PartialEq)]
 pub enum Instructions {
@@ -57,18 +30,14 @@ pub enum Instructions {
     Cast(DataType),               // DataType
     Call(NativeName),             // NativeName
     Exit(i32),                    // i32
-    Assert(Option<DataType>)      // Optional<DataType<Data>>
+    Assert(Option<DataType>),     // Optional<DataType<Data>>
 }
-
-type Tag = u64;
-type Variable = u64;
-type NativeName = u64;
 
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub enum Register {
     C0, // Comp 1, $0
     C1, // Comp 2, $1
-    C2  // Return, $2
+    C2, // Return, $2
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -87,7 +56,7 @@ pub enum DataType {
     UInt128(u128),  // u128, Default: 0
     Float32(f32),   // f32, Default: 0.0
     Float64(f64),   // Float, f64, Default: 0.0
-    Boolean(bool)   // bool, Default: false
+    Boolean(bool),  // bool, Default: false
 }
 
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -95,14 +64,54 @@ pub enum Operation {
     Logic(LogicOperation),
     Arithmetic(ArithmeticOperation),
     Relational(RelationalOperation),
-    BitWise(BitWiseOperation) //TODO Not in m1!
+    BitWise(BitWiseOperation), //TODO Not in m1!
+}
+impl traits::EnumWithU8 for Operation {
+    fn to_u8(&self) -> u8 {
+        match self {
+            Operation::Logic(l) => match l {
+                LogicOperation::Not => 0,
+                LogicOperation::And => 1,
+                LogicOperation::Or => 2,
+            },
+            Operation::Arithmetic(a) => match a {
+                ArithmeticOperation::Add => 3,
+                ArithmeticOperation::Subtract => 4,
+                ArithmeticOperation::Multiplication => 5,
+                ArithmeticOperation::Division => 6,
+                ArithmeticOperation::Modulus => 7,
+                ArithmeticOperation::Increment => 8,
+                ArithmeticOperation::Decrement => 9,
+            },
+            Operation::Relational(r) => match r {
+                RelationalOperation::Equal => 10,
+                RelationalOperation::NotEqual => 11,
+                RelationalOperation::Greater => 12,
+                RelationalOperation::Less => 13,
+                RelationalOperation::GreaterEqual => 14,
+                RelationalOperation::LessEqual => 15,
+            },
+            Operation::BitWise(b) => match b {
+                BitWiseOperation::And => 16,
+                BitWiseOperation::Or => 17,
+                BitWiseOperation::Xor => 18,
+                BitWiseOperation::Not => 19,
+                BitWiseOperation::ShiftLeft(_) => 20,
+                BitWiseOperation::ShiftRight(_) => 21,
+            },
+        }
+    }
+
+    fn from_u8(e: u8) -> Self {
+        unimplemented!()
+    }
 }
 
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub enum LogicOperation {
     Not, // !
     And, // &&
-    Or   // ||
+    Or,  // ||
 }
 
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -113,7 +122,7 @@ pub enum ArithmeticOperation {
     Division,       // /
     Modulus,        // %
     Increment,      // ++
-    Decrement       // --
+    Decrement,      // --
 }
 
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -123,7 +132,7 @@ pub enum RelationalOperation {
     Greater,      // >
     Less,         // <
     GreaterEqual, //>=
-    LessEqual     // <=
+    LessEqual,    // <=
 }
 
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -133,5 +142,43 @@ pub enum BitWiseOperation {
     Xor,             // ^
     Not,             // ~
     ShiftLeft(u64),  // << u64
-    ShiftRight(u64)  // >> u64
+    ShiftRight(u64), // >> u64
+}
+
+/**
+ * This struct holds mappings from the compiled program to the un-compiled program.
+ * This is only generated for debug builds.
+ */
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct DebugData {
+    pub native_lib_mappings: HashMap<NativeName, String>, // Library Hash, Library Name
+    pub call_function_mappings: HashMap<NativeName, String>, // Call Function Hash, Call Function Name
+    pub namespace_mappings: HashMap<u64, String>, // Namespace Hash, Namespace name //TODO Needed?
+    pub variable_name_mappings: HashMap<Variable, String>, // Namespace + Variable Hash, Namespace + Variable Name
+    pub tag_name_mappings: HashMap<Tag, String>, // Namespace + Tag Hash, Namespace + Tag Name
+    pub line_mappings: HashMap<TagMap, String>, // Instruction Frame and Instruction Count, File Name + File Line Number
+}
+
+/**
+ * This struct holds the metadata of the HTA program.
+ * This struct is created during compile time and then exported to the binary.
+ * The runtime will then read in this data in during program startup.
+ * This data is for the runtime only, the program cannot access it.
+ */
+#[derive(Clone, Debug)]
+pub struct MetaData {
+    pub name: String,
+    pub authors: Vec<String>,
+    pub version: String,
+    pub website: String,
+    pub git: String,
+    pub license: String,
+    pub natives: Vec<NativeName>, // Required native libraries
+                                  // pub custom: Map<String, String> //TODO Add this later. Maybe?
+}
+
+#[derive(Clone, Debug)]
+pub struct Program {
+    pub tags: HashMap<Tag, TagMap>,
+    pub instructions: Vec<Vec<Instructions>>,
 }

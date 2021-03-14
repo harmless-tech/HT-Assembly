@@ -20,8 +20,8 @@
 
 #REQUIRE hta_version 0.0.1 // Requires HTA 0.0.1 or higher
 #REQUIRE semicolons true   // Every instruction line must end with a semicolon.
-#REQUIRE std true          // Default true. Allows the std library to be used.
-//#REQUIRE native_lib NAME // Requires a native lib. (Not implemented in m1!)
+#REQUIRE native_lib std
+//#REQUIRE native_lib NAME // Requires a native lib. (Not implemented in m1, except for std!)
 
 // !!! Any File !!!
 #NAMESPACE main
