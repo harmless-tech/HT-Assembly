@@ -1,3 +1,5 @@
+//TODO Get rid of this?
+
 pub fn error(result: std::io::Result<()>) -> Result<(), String> {
     match result {
         Ok(r) => Ok(r),
