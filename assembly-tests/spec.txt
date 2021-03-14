@@ -10,6 +10,8 @@ Compiling libraries that can be linked in later is currently not supported.
 Importing dlls/other libs to add more syscall functions is currently not supported.
 //
 
+There is a maximum to the amount of lines a program can have, but I don't know it.
+
 File Types:
 Programming file: .ha
 Binary file     : .hab
