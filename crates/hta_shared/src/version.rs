@@ -55,7 +55,10 @@ mod tests {
 
         assert_eq!(parse_version_str("1.1.0"), Some((1, 1, 0)));
         assert_eq!(parse_version_str("1.1.3214"), Some((1, 1, 3214)));
-        assert_eq!(parse_version_str("723498.1.124523"), Some((723498, 1, 124523)));
+        assert_eq!(
+            parse_version_str("723498.1.124523"),
+            Some((723498, 1, 124523))
+        );
         assert_eq!(parse_version_str("0.0.0"), Some((0, 0, 0)));
     }
 

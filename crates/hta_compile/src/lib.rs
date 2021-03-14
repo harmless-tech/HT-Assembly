@@ -10,9 +10,18 @@ use std::{
     path::PathBuf
 };
 
+// Steps
+/*
+ * Take in main file and process info.
+ * Take in other files and process info.
+ * Make sure files do not import each other.
+ *
+ *
+ */
+
 //TODO Allow custom file name.
 static DEFAULT_PATH: &str = "build/bin/";
-static DEFAULT_FILE: &str = "main.hab";
+static DEFAULT_FILE_NAME: &str = "main";
 
 // struct CompileData {}
 
@@ -22,7 +31,8 @@ static DEFAULT_FILE: &str = "main.hab";
 
 //TODO Returned compiled struct.
 //TODO Support multiple files.
-pub fn compile(hta_file: &str) {
+pub fn compile(hta_file: &str) -> Result<String, String> {
+    // Return a result of <FILENAME, ERROR>
     let compiler_version = match option_env!("CARGO_PKG_VERSION") {
         Some(v) => {
             info!("HTA Compiler Version: {}", v);
@@ -40,8 +50,13 @@ pub fn compile(hta_file: &str) {
     {
         use std::io::Write;
         // Header "HTA"
-        let mut file =
-            File::create(PathBuf::from(format!("{}{}", DEFAULT_PATH, DEFAULT_FILE))).unwrap();
+        let mut file = File::create(PathBuf::from(format!(
+            "{}{}{}",
+            DEFAULT_PATH,
+            DEFAULT_FILE_NAME,
+            hta_shared::FILE_EXT_BINARY
+        )))
+        .unwrap();
         file.seek(SeekFrom::Start(0)).unwrap();
 
         let buffer = &["HTA".as_bytes(), &[0_u8; 5]].concat();
@@ -54,16 +69,37 @@ pub fn compile(hta_file: &str) {
         file.write_all(header_buffer).unwrap();
         file.write_all(chunk_size).unwrap();
         file.write_all(buffer).unwrap();
+
+        // Write debug struct
+        let debug_info = hta_shared::HTADebugData {
+            call_function_mappings: Default::default(),
+            namespace_mappings: Default::default(),
+            variable_name_mappings: Default::default(),
+            tag_name_mappings: Default::default(),
+            line_mappings: Default::default()
+        };
+
+        let header_buffer = &["DBG".as_bytes(), &[0_u8; 5]].concat();
+        let buffer = bincode::serialize(&debug_info).unwrap();
+        let chunk_size = &(buffer.len() as u64).to_be_bytes();
+        file.write_all(header_buffer).unwrap();
+        file.write_all(chunk_size).unwrap();
+        file.write_all(&buffer).unwrap();
     }
 
     {
         use std::io::Read;
         // Read back file
-        let mut file =
-            File::open(PathBuf::from(format!("{}{}", DEFAULT_PATH, DEFAULT_FILE))).unwrap();
+        let mut file = File::open(PathBuf::from(format!(
+            "{}{}{}",
+            DEFAULT_PATH,
+            DEFAULT_FILE_NAME,
+            hta_shared::FILE_EXT_BINARY
+        )))
+        .unwrap();
         file.seek(SeekFrom::Start(0)).unwrap();
 
-        let mut buffer = [0_u8; 256];
+        let mut buffer = [0_u8; 8];
 
         file.by_ref().take(8).read(&mut buffer).unwrap();
         assert_eq!(&buffer[0..3], "HTA".as_bytes());
@@ -71,9 +107,11 @@ pub fn compile(hta_file: &str) {
         file.by_ref().take(8).read(&mut buffer).unwrap();
         assert_eq!(&buffer[0..5], "HINFO".as_bytes());
 
+        // Header info
         file.by_ref().take(8).read(&mut buffer).unwrap();
         let (int_bytes, _) = buffer.split_at(mem::size_of::<u64>());
         assert_eq!(int_bytes, &(26 as u64).to_be_bytes());
+
         let chunk_size = u64::from_be_bytes(int_bytes.try_into().unwrap());
         let mut buffer = vec![0_u8; chunk_size as usize];
 
@@ -82,6 +120,21 @@ pub fn compile(hta_file: &str) {
             &buffer[0..(chunk_size as usize)],
             "Test, Harmless_Tech, 0.0.1".as_bytes()
         );
+
+        // Debug
+        let mut buffer = [0_u8; 8];
+
+        file.by_ref().take(8).read(&mut buffer).unwrap();
+        assert_eq!(&buffer[0..3], "DBG".as_bytes());
+
+        file.by_ref().take(8).read(&mut buffer).unwrap();
+        let (int_bytes, _) = buffer.split_at(mem::size_of::<u64>());
+
+        let chunk_size = u64::from_be_bytes(int_bytes.try_into().unwrap());
+        debug!("DBG Chunk Size: {}", chunk_size);
+        let mut buffer = vec![0_u8; chunk_size as usize];
+
+        file.by_ref().take(chunk_size).read(&mut buffer).unwrap();
     }
     //
 
@@ -90,6 +143,8 @@ pub fn compile(hta_file: &str) {
     //     .split("\n")
     //     .map(|s| String::from(s.trim()))
     //     .collect();
+
+    Err("NOT IMPL".to_string())
 }
 
 // #[inline]
