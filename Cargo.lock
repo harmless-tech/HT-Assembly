@@ -115,6 +115,7 @@ dependencies = [
  "regex",
  "regex_static",
  "seahash",
+ "serde",
 ]
 
 [[package]]

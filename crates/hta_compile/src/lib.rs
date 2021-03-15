@@ -1,14 +1,12 @@
 mod crafter;
 mod writer;
 
-use hta_shared::{version::parse_version_str, DebugData, Instructions, MetaData, Program};
+use hta_shared::{hfs, version::parse_version_str, DebugData, MetaData, Program};
 use log::{debug, error, info, trace, warn};
 use std::{
-    convert::TryInto,
     fs,
     fs::File,
     io::{Seek, SeekFrom},
-    mem,
     path::PathBuf,
 };
 
@@ -25,14 +23,14 @@ static BINARY_PATH: &str = "build/bin/";
 static DEFAULT_FILE_NAME: &str = "main";
 
 struct WriteData {
-    build_data: (String), // Right now this is just a file name.
+    build_data: (String, String), // Right now this is just a file name.
     compiler_version: (u64, u64, u64),
-    debug_data: DebugData,
+    debug_data: Option<DebugData>,
     metadata: MetaData,
     program: Program,
 }
 
-pub fn compile(hta_file: &str, dbg: bool) -> Result<(), String> {
+pub fn compile(hta_file: &str, dbg: bool) -> Result<String, String> {
     let compiler_version = match parse_version_str(option_env!("CARGO_PKG_VERSION").unwrap()) {
         Some(v) => {
             info!("HTA Compiler Version: {}.{}.{}", v.0, v.1, v.2);
@@ -50,6 +48,8 @@ pub fn compile(hta_file: &str, dbg: bool) -> Result<(), String> {
     //     .map(|s| String::from(s.trim()))
     //     .collect();
 
+    // write_binary()?;
+
     Err("NOT IMPL".to_string())
 }
 
@@ -62,7 +62,7 @@ pub fn compile(hta_file: &str, dbg: bool) -> Result<(), String> {
  *         Major
  *         Minor
  *         Patch
- * DBG Header
+ * DBG Header (OPT)
  *     Debug Data
  *         Size of struct
  *         Struct using bincode
@@ -87,11 +87,47 @@ pub fn compile(hta_file: &str, dbg: bool) -> Result<(), String> {
  *                 Repeat
  *                 Instruction (u8)
  *                 Data for instruction (with sizing when needed)
- * END header
+ * HTAEND header
  *     Any data can be put here, it will be ignored by the runtime.
  */
-fn write_binary(data: &WriteData) -> Result<(), String> {
-    Instructions::Exit(-1);
+fn write_binary(data: &WriteData) -> Result<String, String> {
+    hfs::error(fs::create_dir_all(BINARY_PATH))?;
+
+    let mut file = File::create(PathBuf::from(format!(
+        "{}{}{}",
+        BINARY_PATH,
+        data.build_data.0,
+        hta_shared::FILE_EXT_BINARY
+    )))
+    .expect("Could not create a binary file to write to!");
+
+    hfs::error_u64(file.seek(SeekFrom::Start(0)))?;
+
+    // HTA header
+    writer::header(&mut file, "HTA")?;
+
+    // Compiler Version
+    writer::version(&mut file, data.compiler_version)?;
+
+    // DBG
+    match &data.debug_data {
+        None => info!("No debug data is being written to the binary."),
+        Some(dbg) => {
+            writer::header(&mut file, "DBG")?;
+            writer::struct_with_size(&mut file, dbg)?;
+        }
+    }
+
+    // META
+    writer::header(&mut file, "META")?;
+    writer::metadata(&mut file, &data.metadata)?;
+
+    // PROGRAM
+    writer::header(&mut file, "PROGRAM")?;
+    writer::program(&mut file, &data.program)?;
+
+    // HTAEND
+    writer::header(&mut file, "HTAEND")?;
 
     Err("NOT IMPL".to_string())
 }

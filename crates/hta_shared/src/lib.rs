@@ -79,9 +79,30 @@ impl traits::EnumWithU8 for Instructions {
 
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub enum Register {
-    C0 = 0x0000, // Comp 1, $0
-    C1 = 0x0001, // Comp 2, $1
-    C2 = 0x0010, // Return, $2
+    C0, // Comp 1, $0
+    C1, // Comp 2, $1
+    C2, // Return, $2
+}
+impl traits::EnumWithU8 for Register {
+    fn to_u8(&self) -> u8 {
+        match self {
+            Register::C0 => 0,
+            Register::C1 => 1,
+            Register::C2 => 2,
+        }
+    }
+
+    fn from_u8(e: u8) -> Self {
+        match e {
+            0 => Register::C0,
+            1 => Register::C1,
+            2 => Register::C2,
+            _ => {
+                error!("Register not found, defaulting to Register 0!");
+                Register::C0
+            }
+        }
+    }
 }
 
 #[derive(Clone, Debug, PartialEq)]
