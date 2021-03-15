@@ -3,7 +3,6 @@ pub mod traits;
 pub mod version;
 
 use log::error;
-use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
 pub static FILE_EXT_CODE: &str = ".ha"; // File extension for code files.
@@ -14,6 +13,49 @@ pub type Tag = u64;
 pub type TagMap = (u64, u64); // Frame, Instruction
 pub type Variable = u64;
 pub type NativeName = u64; // This is for the name of the native library and the native function being called.
+
+/**
+ * This struct holds mappings from the compiled program to the un-compiled program.
+ * This is only generated for debug builds.
+ */
+// This was considered, however it is kinda useless when the namespace is going to be
+// combined with the functions and tags.
+// (3) pub namespace_mappings: HashMap<u64, String>, // Namespace Hash, Namespace name
+#[derive(Clone, Debug)]
+pub struct DebugData {
+    pub native_lib_mappings: HashMap<NativeName, String>, // Library Hash, Library Name
+    pub call_function_mappings: HashMap<NativeName, String>, // Call Function Hash, Call Function Name
+    pub variable_name_mappings: HashMap<Variable, String>, // Namespace + Variable Hash, Namespace + Variable Name
+    pub tag_name_mappings: HashMap<Tag, String>, // Namespace + Tag Hash, Namespace + Tag Name
+    pub line_mappings: HashMap<TagMap, String>, // Instruction Frame and Instruction Count, File Name + File Line Number
+}
+
+/**
+ * This struct holds the metadata of the HTA program.
+ * This struct is created during compile time and then exported to the binary.
+ * The runtime will then read in this data in during program startup.
+ * This data is for the runtime only, there is no way to access it from HT Assembly.
+ */
+#[derive(Clone, Debug)]
+pub struct MetaData {
+    pub name: String,
+    pub authors: Vec<String>,
+    pub version: String,
+    pub website: String,
+    pub git: String,
+    pub license: String,
+    pub natives: Vec<NativeName>, // Required native libraries
+    // pub custom: Map<String, String> //TODO Add this later. Maybe?
+}
+
+/**
+ * This struct holds the HTA program.
+ */
+#[derive(Clone, Debug)]
+pub struct Program {
+    pub tags: HashMap<Tag, TagMap>,
+    pub instructions: Vec<Vec<Instructions>>,
+}
 
 #[derive(Clone, Debug, PartialEq)]
 pub enum Instructions {
@@ -283,45 +325,4 @@ pub enum BitWiseOperation {
     Not,             // ~
     ShiftLeft(u64),  // << u64
     ShiftRight(u64), // >> u64
-}
-
-/**
- * This struct holds mappings from the compiled program to the un-compiled program.
- * This is only generated for debug builds.
- */
-#[derive(Clone, Debug, Serialize, Deserialize)]
-pub struct DebugData {
-    pub native_lib_mappings: HashMap<NativeName, String>, // Library Hash, Library Name
-    pub call_function_mappings: HashMap<NativeName, String>, // Call Function Hash, Call Function Name
-    pub namespace_mappings: HashMap<u64, String>, // Namespace Hash, Namespace name //TODO Needed?
-    pub variable_name_mappings: HashMap<Variable, String>, // Namespace + Variable Hash, Namespace + Variable Name
-    pub tag_name_mappings: HashMap<Tag, String>, // Namespace + Tag Hash, Namespace + Tag Name
-    pub line_mappings: HashMap<TagMap, String>, // Instruction Frame and Instruction Count, File Name + File Line Number
-}
-
-/**
- * This struct holds the metadata of the HTA program.
- * This struct is created during compile time and then exported to the binary.
- * The runtime will then read in this data in during program startup.
- * This data is for the runtime only, there is no way to access it from HT Assembly.
- */
-#[derive(Clone, Debug)]
-pub struct MetaData {
-    pub name: String,
-    pub authors: Vec<String>,
-    pub version: String,
-    pub website: String,
-    pub git: String,
-    pub license: String,
-    pub natives: Vec<NativeName>, // Required native libraries
-                                  // pub custom: Map<String, String> //TODO Add this later. Maybe?
-}
-
-/**
- * This struct holds the HTA program.
- */
-#[derive(Clone, Debug)]
-pub struct Program {
-    pub tags: HashMap<Tag, TagMap>,
-    pub instructions: Vec<Vec<Instructions>>,
 }

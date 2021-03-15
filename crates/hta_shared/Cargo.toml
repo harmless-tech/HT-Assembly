@@ -15,4 +15,3 @@ license-file = "../../LICENSE"
 
 [dependencies]
 log = "0.4.13"
-serde = "1.0.124"

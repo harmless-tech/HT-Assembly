@@ -30,6 +30,7 @@ struct WriteData {
     program: Program,
 }
 
+// Returns the binary file name on success.
 pub fn compile(hta_file: &str, dbg: bool) -> Result<String, String> {
     let compiler_version = match parse_version_str(option_env!("CARGO_PKG_VERSION").unwrap()) {
         Some(v) => {
@@ -77,7 +78,7 @@ fn write_binary(data: &WriteData) -> Result<String, String> {
         None => info!("No debug data is being written to the binary."),
         Some(dbg) => {
             writer::header(&mut file, "DBG")?;
-            writer::struct_with_size(&mut file, dbg)?;
+            writer::debug_data(&mut file, dbg)?;
         }
     }
 

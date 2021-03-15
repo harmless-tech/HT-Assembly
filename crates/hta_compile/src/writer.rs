@@ -1,6 +1,4 @@
-use hta_shared::{
-    hfs, hfs::error, traits::EnumWithU8, DataType, Instructions, MetaData, Program, Tag, TagMap,
-};
+use hta_shared::{hfs, hfs::error, traits::EnumWithU8, DataType, Instructions, MetaData, Program, Tag, TagMap, DebugData};
 use std::{
     any::{Any, TypeId},
     collections::HashMap,
@@ -26,20 +24,44 @@ pub fn version(file: &mut File, v: (u64, u64, u64)) -> Result<(), String> {
     write_u64(file, v.2)
 }
 
-//TODO Remove this sooner or later.
-pub fn struct_with_size<T: serde::Serialize>(file: &mut File, data: &T) -> Result<(), String> {
-    let buffer = bincode_error(bincode::serialize(&data))?;
-
-    write_u64(file, buffer.len() as u64)?;
-    hfs::error(file.by_ref().write_all(&buffer))
-}
-
-//TODO Remove this sooner or later.
-fn bincode_error(result: Result<Vec<u8>, Box<bincode::ErrorKind>>) -> Result<Vec<u8>, String> {
-    match result {
-        Ok(r) => Ok(r),
-        Err(r) => Err(r.deref().to_string()),
+pub fn debug_data(file: &mut File, data: &DebugData) -> Result<(), String> {
+    // native_lib_mappings
+    write_u64(file, data.native_lib_mappings.len() as u64)?;
+    for (name, mapping) in data.native_lib_mappings.iter() {
+        write_u64(file, *name)?;
+        write_string(file, mapping)?;
     }
+
+    // call_function_mappings
+    write_u64(file, data.call_function_mappings.len() as u64)?;
+    for (name, mapping) in data.call_function_mappings.iter() {
+        write_u64(file, *name)?;
+        write_string(file, mapping)?;
+    }
+
+    // variable_name_mappings
+    write_u64(file, data.variable_name_mappings.len() as u64)?;
+    for (name, mapping) in data.variable_name_mappings.iter() {
+        write_u64(file, *name)?;
+        write_string(file, mapping)?;
+    }
+
+    // tag_name_mappings
+    write_u64(file, data.tag_name_mappings.len() as u64)?;
+    for (name, mapping) in data.tag_name_mappings.iter() {
+        write_u64(file, *name)?;
+        write_string(file, mapping)?;
+    }
+
+    // line_mappings
+    write_u64(file, data.line_mappings.len() as u64)?;
+    for (name, mapping) in data.line_mappings.iter() {
+        write_u64(file, name.0)?;
+        write_u64(file, name.1)?;
+        write_string(file, mapping)?;
+    }
+
+    Ok(())
 }
 
 pub fn metadata(file: &mut File, data: &MetaData) -> Result<(), String> {
