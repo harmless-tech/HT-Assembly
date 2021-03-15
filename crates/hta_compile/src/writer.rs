@@ -43,23 +43,12 @@ fn bincode_error(result: Result<Vec<u8>, Box<bincode::ErrorKind>>) -> Result<Vec
 }
 
 pub fn metadata(file: &mut File, data: &MetaData) -> Result<(), String> {
-    // name
-    write_string(file, &data.name)?;
-
-    // authors
-    write_string(file, &data.authors.join(", "))?;
-
-    // version
-    write_string(file, &data.version)?;
-
-    // website
-    write_string(file, &data.website)?;
-
-    // git
-    write_string(file, &data.git)?;
-
-    // license
-    write_string(file, &data.license)?;
+    write_string(file, &data.name)?; // name
+    write_string(file, &data.authors.join(", "))?; // authors
+    write_string(file, &data.version)?; // version
+    write_string(file, &data.website)?; // website
+    write_string(file, &data.git)?; // git
+    write_string(file, &data.license)?; // license
 
     // natives
     write_u64(file, data.natives.len() as u64)?; // Amount of natives.
@@ -104,9 +93,7 @@ fn instructions(file: &mut File, data: &Vec<Vec<Instructions>>) -> Result<(), St
                     write_u64(file, *var)?;
                     data_type(file, dat)?;
                 }
-                Instructions::RegVar(var) => {
-                    write_u64(file, *var)?;
-                }
+                Instructions::RegVar(var) => write_u64(file, *var)?,
                 Instructions::SetReg(reg, dat) => {
                     write_u8(file, reg.to_u8())?;
                     data_type(file, dat)?;
@@ -119,27 +106,15 @@ fn instructions(file: &mut File, data: &Vec<Vec<Instructions>>) -> Result<(), St
                     write_u8(file, reg1.to_u8())?;
                     write_u8(file, reg2.to_u8())?;
                 }
-                Instructions::Op(op) => {
-                    write_u8(file, op.to_u8())?;
-                }
-                Instructions::Jmp(tag) => {
-                    write_u64(file, *tag)?;
-                }
-                Instructions::PushJmp(tag) => {
-                    write_u64(file, *tag)?;
-                }
+                Instructions::Op(op) => write_u8(file, op.to_u8())?,
+                Instructions::Jmp(tag) => write_u64(file, *tag)?,
+                Instructions::PushJmp(tag) => write_u64(file, *tag)?,
                 Instructions::PopJmp => {}
-                Instructions::Cast(dat) => {
-                    data_type(file, dat)?;
-                }
-                Instructions::Call(nat) => {
-                    write_u64(file, *nat)?;
-                }
-                Instructions::Exit(code) => {
-                    write_i32(file, *code)?;
-                }
+                Instructions::Cast(dat) => data_type(file, dat)?,
+                Instructions::Call(nat) => write_u64(file, *nat)?,
+                Instructions::Exit(code) => write_i32(file, *code)?,
                 Instructions::Assert(op_dat) => {
-                    return Err("The Instruction Assert is not supported yet!".to_string());
+                    return Err("The Instruction Assert is not supported yet!".to_string())
                 }
             }
         }

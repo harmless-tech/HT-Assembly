@@ -8,13 +8,12 @@ use std::collections::HashMap;
 
 pub static FILE_EXT_CODE: &str = ".ha"; // File extension for code files.
 pub static FILE_EXT_BINARY: &str = ".hab"; // File extension for built binary files.
-pub static DEBUG_FILE_EXT: &str = ".hadbg"; // This will be build into the binary file. TODO Maybe?
 pub static FILE_EXT_SNAPSHOT: &str = ".hasnap"; //TODO Maybe?
 
 pub type Tag = u64;
 pub type TagMap = (u64, u64); // Frame, Instruction
 pub type Variable = u64;
-pub type NativeName = u64; // This is for the name of the native library and the native function being called
+pub type NativeName = u64; // This is for the name of the native library and the native function being called.
 
 #[derive(Clone, Debug, PartialEq)]
 pub enum Instructions {
@@ -304,7 +303,7 @@ pub struct DebugData {
  * This struct holds the metadata of the HTA program.
  * This struct is created during compile time and then exported to the binary.
  * The runtime will then read in this data in during program startup.
- * This data is for the runtime only, the program cannot access it.
+ * This data is for the runtime only, there is no way to access it from HT Assembly.
  */
 #[derive(Clone, Debug)]
 pub struct MetaData {
@@ -318,6 +317,9 @@ pub struct MetaData {
                                   // pub custom: Map<String, String> //TODO Add this later. Maybe?
 }
 
+/**
+ * This struct holds the HTA program.
+ */
 #[derive(Clone, Debug)]
 pub struct Program {
     pub tags: HashMap<Tag, TagMap>,
