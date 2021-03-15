@@ -29,6 +29,16 @@ jobs:
         run: cargo build --verbose --workspace
       - name: Run tests
         run: cargo test --verbose --workspace
+      - name: Build Release
+        run: cargo build --verbose --workspace --release
+      - name: Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: artifacts-lin
+          path: |
+            target/release/hta
+            target/release/*.so
+            target/release/*.a
 
   build-macos:
     runs-on: macos-latest
@@ -47,6 +57,16 @@ jobs:
         run: cargo build --verbose --workspace
       - name: Run tests
         run: cargo test --verbose --workspace
+      - name: Build Release
+        run: cargo build --verbose --workspace --release
+      - name: Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: artifacts-mac
+          path: |
+            target/release/hta
+            target/release/*.dylib
+            target/release/*.a
 
   build-windows:
     runs-on: windows-latest
@@ -65,3 +85,14 @@ jobs:
         run: cargo build --verbose --workspace
       - name: Run tests
         run: cargo test --verbose --workspace
+      - name: Build Release
+        run: cargo build --verbose --workspace --release
+      - name: Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: artifacts-win
+          path: |
+            target/release/hta.exe
+            target/release/*.dll
+            target/release/*.lib
+            !target/release/*.dll.lib

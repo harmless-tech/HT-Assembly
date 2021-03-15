@@ -1,3 +1,5 @@
+[![Rust Build and Test](https://github.com/harmless-tech/HT-Assembly/actions/workflows/rust.yml/badge.svg)](https://github.com/harmless-tech/HT-Assembly/actions/workflows/rust.yml)
+
 # HT-Assembly
 An open source assembly language that uses a runtime.
 Meant to be embedded in other applications.
