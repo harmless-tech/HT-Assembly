@@ -45,7 +45,7 @@ pub struct MetaData {
     pub git: String,
     pub license: String,
     pub natives: Vec<NativeName>, // Required native libraries
-    // pub custom: Map<String, String> //TODO Add this later. Maybe?
+                                  // pub custom: Map<String, String> //TODO Add this later. Maybe?
 }
 
 /**

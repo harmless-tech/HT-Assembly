@@ -5,6 +5,11 @@
  * Do not put comments in comments!
  */
 
+/*  */
+/*
+
+*/
+
 // !!! Main File Only !!!
 #BUILD file_name m1-test // Sets the name of the binary file.
 
@@ -15,8 +20,8 @@
 #INFO git https://github.com/harmless-tech/HT-Assembly // Git repo of the program
 #INFO license MIT                                      // License of the program
 
-#INFO custom cus_data1 THE DATA IS ME!
-#INFO custom cus_data2 THE DATA IS ME!!!
+#INFO custo/*m cus_data1 THE DATA IS ME!
+#INFO custom cus_data2 THE DATA IS M*/E!!!
 
 #REQUIRE hta_version 0.0.1 // Requires HTA 0.0.1 or higher
 #REQUIRE semicolons true   // Every instruction line must end with a semicolon.
@@ -47,3 +52,5 @@ NEWLINE:
       alloc h_float float HELLO_STR;
 
 EXIT: exit 0;
+
+//EXIT2: // This tag would error out, because it cannot link to an instruction.

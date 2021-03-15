@@ -1,4 +1,7 @@
-use hta_shared::{hfs, hfs::error, traits::EnumWithU8, DataType, Instructions, MetaData, Program, Tag, TagMap, DebugData};
+use hta_shared::{
+    hfs, hfs::error, traits::EnumWithU8, DataType, DebugData, Instructions, MetaData, Program, Tag,
+    TagMap,
+};
 use std::{
     any::{Any, TypeId},
     collections::HashMap,

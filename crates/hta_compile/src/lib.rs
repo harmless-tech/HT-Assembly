@@ -1,3 +1,4 @@
+mod compiler;
 mod crafter;
 mod writer;
 
@@ -43,11 +44,24 @@ pub fn compile(hta_file: &str, dbg: bool) -> Result<String, String> {
         }
     };
 
-    // let contents: String = intake_file(hta_file);
-    // let lines: Vec<String> = contents
-    //     .split("\n")
-    //     .map(|s| String::from(s.trim()))
-    //     .collect();
+    let contents = file::intake(hta_file)?;
+    let mut lines: Vec<String> = contents
+        .split("\n")
+        .map(|s| String::from(s.trim()))
+        .collect();
+
+    debug!("{}", lines.clone().join("\n"));
+
+    compiler::remove_comments(&mut lines);
+
+    debug!("{}", lines.clone().join("\n"));
+
+    // debug!("{:?}", lines);
+    //
+    // for line in lines.iter_mut() {
+    //     line.make_ascii_uppercase();
+    // }
+    // debug!("{:?}", lines);
 
     // write_binary()?;
 
