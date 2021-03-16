@@ -7,7 +7,7 @@ This is the alpha language spec for HTA.
 Nothing here is final and info may be outdated.
 
 Compiling libraries that can be linked in later is currently not supported.
-Importing dlls/other libs to add more syscall functions is currently not supported.
+Importing dlls/other libs to add more call functions is currently not supported.
 //
 
 There is a maximum to the amount of lines a program can have, but I don't know it.
@@ -31,26 +31,27 @@ A program's entry point starts at the "ENTRY:" tag.
 
 Pre-Processors:
 Pre-Processors start with a #. They must be on their own line, and comments can only come after all values are defined.
-  - META [ARG VALUES]:                                  //TODO Struct info.
+  - BUILD [ARG VALUES]:
+  Entry file only!
+    - binary_name VALUE :: main :: Sets the name of the compiled binary. :: #
+  - INFO [ARG VALUES]:
+  Entry file only!
   Defines certain info about a HTA program. Not required.
-    - name    VALUES :: main  :: Sets the name of the program.     :: #META name I'm a name!
-    - authors VALUES :: none  :: Sets the authors of the program.  :: #META authors HT AA
-    - version VALUE  :: 1.0.0 :: Sets the version of the program.  :: #META version 1.0.0
-    - website VALUE  :: none  :: Sets the website of the program.  :: #INFO website https://harmless.tech
-    - git     VALUE  :: none  :: Sets the git repo of the program. :: #INFO git https://github.com/harmless-tech/HT-Assembly
+    - name    VALUE  :: main  :: Sets the name of the program.     :: #INFO name I'm a name!
+    - authors VALUES :: none  :: Sets the authors of the program.  :: #INFO authors HT, AA
+    - version VALUE  :: 1.0.0 :: Sets the version of the program.  :: #INFO version 1.0.0
+    - website VALUE  :: none  :: Sets the website of the program.  :: #INFO website harmless.tech                     (https:// is added by the compiler)
+    - git     VALUE  :: none  :: Sets the git repo of the program. :: #INFO git github.com/harmless-tech/HT-Assembly  (https:// is added by the compiler)
     - license VALUES :: none  :: Sets the license of the program.  :: #INFO license MIT
   - REQUIRE [ARG VALUES]:
+  Entry file only!
   Imposes requirements on the HTA file. Not required, but highly suggested.
-    - hta_version VERSION COMPARE[greater, greater_equal, equal] :: COMPILER_VERSION greater_equal :: Sets the required HTA version to run/compile this program. :: #REQUIRE hta_version 0.0.1 greater
-    - file_type TYPES[assembly, structs]                         :: assembly structs               :: Sets the file to only allow certain things.                :: #REQUIRE file_type assembly
-    - semicolons BOOLEAN                                         :: false                          :: Forces semicolons to be used at the end of code lines.     :: #REQUIRE semicolons true
+    - hta_version VERSION MAJOR.MINOR.PATCH :: COMPILER_VERSION :: Sets the required or greater HTA version to compile this program. :: #REQUIRE hta_version 0.0.1
   - NAMESPACE NAME :: NAME_OF_FILE :: Sets the namespace to which all tags and vars in the file will have. :: #NAMESPACE ht
   This would add the namespace onto the tags and vars in the file. This allows for them to be accessed from other files.
-  - IMPORT LIB_NAME :: NO DEFAULT :: Tells the runtime to use a library to allow for more syscalls. :: #IMPORT more_syscalls //TODO Not supported currently.
-  - IMPORT FILE_NAME :: NO DEFAULT :: Tells the compiler to compile another file from which elements are required from. :: #IMPORT structs.has OR #IMPORT add.ha
-  This allows the compiler to discover additional files to compile and link in.
-  - DEFINE NAME ARG :: Finds all instances in the file where there is a NAME and replaces it with ARG.
-  Not really suggested has it could cause serious problems.
+  - IMPORT FILE_NAME :: NO DEFAULT :: Tells the compiler to compile another file from which elements are required from. :: #IMPORT structs.ha OR #IMPORT add.ha
+  - DEFINE [NAME VALUES]
+    - name VALUES :: none :: Replaces every instance of name with VALUES after it is defined. (NOT RECOMMEND) This can cause a lot of UB. :: #DEFINE HELLO_STR "Hello!"
 
 Builtin Types:
 char, string, int8, int16, int32 (int), int64, int128, uint8 (byte), uint16, uint32 (uint), uint64, uint128, float32, float64 (float), boolean //, object, void. (Not in m1)
@@ -75,6 +76,7 @@ Allows a program to jump to that location.
 
 Commands:
   - alloc NAME TYPE DATA(OPTIONAL)  :: Allocates a variable of a certain type. Variables can never be null.
+  - dealloc NAME                    :: DeAllocates a variable. If the variable does not exist then nothing happens.
   - setvar NAME DATA                :: Sets a variable to the inserted data. (Data must match variable type.)
   - regvar NAME                     :: Takes the return register and places it into a variable.
   - setreg REG TYPE DATA(OPTIONAL)  :: Sets a register to the inserted data.
@@ -95,3 +97,7 @@ Operations:
   - Arith: +, -, *, /, %, ++, --
   - Rel: ==, !=, >, <, >=, <=
   - BitWise: &, |, ^, ~, << u64, >> u64 // u64 defaults to 1. //TODO Bitwise not in m1.
+
+Natives: //TODO Not in m1.
+Natives will be loaded using dynamic libraries. All loaded natives must have their own namespace.
+Their namespace can conflict with the namespace of the HTA program.

@@ -14,19 +14,19 @@
 // Line comments are remove first.
 
 // !!! Entry File Only !!!
-#BUILD file_name m1-test // Sets the name of the binary file.
+#BUILD binary_name m1-test // Sets the name of the binary file.
 
 #INFO name Test                                // Name of the program
 #INFO authors Harmless_Tech                    // Authors of the program (Split using commas)
 #INFO version 0.0.1                            // Version of the program
-#INFO website harmless.tech                    // Website of the program (https:// will be appended to the front)
+#INFO website harmless.tech                    // Website of the program  (https:// will be appended to the front)
 #INFO git github.com/harmless-tech/HT-Assembly // Git repo of the program (https:// will be appended to the front)
 #INFO license MIT                              // License of the program
 
 /* #INFO custom cus_data1 THE DATA IS ME!     // Custom data is currently not allowed. (May never be allowed)
 #INFO custom cus_data2 THE DATA IS ME!!! */
 
-#REQUIRE hta_version 0.0.1 // Requires HTA 0.0.1 or higher
+#REQUIRE hta_version 0.0.1 // Requires HTA 0.0.1 or higher. This is only checked by the compiler. The runtime is dependent on the compiler version alone.
 // \/ This should be a setting in a formatter.
 //#REQUIRE semicolons true   // Every instruction line must end with a semicolon. (All instructions still must be on their own line)
 //#REQUIRE native_lib std  // For now the std lib is imported by default.
