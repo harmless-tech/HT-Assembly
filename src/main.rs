@@ -8,7 +8,7 @@ use crate::logging::setup_log;
 use std::process::exit;
 
 //TODO Allow for optional args. (--debug, --binary)
-//TODO Return a Result!
+//TODO Built in formatter?
 fn main() {
     // Logging
     setup_log();

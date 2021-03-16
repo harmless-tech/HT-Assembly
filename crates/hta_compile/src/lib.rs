@@ -10,6 +10,7 @@ use std::{
     io::{Seek, SeekFrom},
     path::PathBuf,
 };
+use std::collections::HashMap;
 
 /* Steps:
  * Take in main file and process info.
@@ -24,11 +25,17 @@ static BINARY_PATH: &str = "build/bin/";
 static DEFAULT_FILE_NAME: &str = "main";
 
 struct WriteData {
-    build_data: (String, String), // Right now this is just a file name. (File Name, EMPTY)
-    compiler_version: (u64, u64, u64),
-    debug_data: Option<DebugData>,
-    metadata: MetaData,
-    program: Program,
+    pub build_data: (String, String), // Right now this is just a file name. (File Name, EMPTY)
+    pub compiler_version: (u64, u64, u64),
+    pub debug_data: Option<DebugData>,
+    pub metadata: MetaData,
+    pub program: Program,
+}
+
+struct PreProcessorData {
+    pub namespace: String,
+    pub imports: Vec<String>,
+    pub defines: HashMap<String, String>
 }
 
 // Returns the binary file name on success.
@@ -45,15 +52,12 @@ pub fn compile(hta_file: &str, dbg: bool) -> Result<String, String> {
         }
     };
 
-    let contents = file::intake(hta_file)?;
+    // Process the entry file.
+    let contents = file::intake(hta_file)?; // Import the entry file.
+    let contents = compiler::remove_comments(contents)?; // Strip comments from entry file.
 
     debug!("Size: {}", contents.clone().len());
     debug!("\n{}", contents.clone());
-
-    let stripped_contents = compiler::remove_comments(contents)?;
-
-    debug!("Size: {}", stripped_contents.clone().len());
-    debug!("\n{}", stripped_contents.clone());
 
     // let mut lines: Vec<String> = contents
     //     .split("\n")
