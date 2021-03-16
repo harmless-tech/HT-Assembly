@@ -5,6 +5,7 @@ use log::{debug, error, info, trace, warn};
 use std::env;
 
 use crate::logging::setup_log;
+use std::process::exit;
 
 //TODO Allow for optional args. (--debug, --binary)
 //TODO Return a Result!
@@ -50,7 +51,13 @@ fn main() {
     }
 
     //TODO Remove!
-    hta_compile::compile("assembly-tests/m1/main.ha", true);
+    match hta_compile::compile("assembly-tests/m1/main.ha", true) {
+        Ok(filename) => info!("[SUCCESS] Compiled binary file is at {}.", filename),
+        Err(err) => {
+            error!("[FAILED] {}", err);
+            exit(-1);
+        }
+    }
     //
 }
 

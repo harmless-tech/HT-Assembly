@@ -1,83 +1,120 @@
-pub fn remove_comments(lines: &mut Vec<String>) -> Result<(), String> {
-    let mut in_block_comment = false;
+use log::error;
+use std::process::exit;
 
+pub fn remove_comments(contents: String) -> Result<String, String> {
+    let mut in_quotes = false;
+    let mut comment_first_slash = false;
+
+    let mut lines: Vec<String> = contents
+        .split("\n")
+        .map(|s| String::from(s.trim()))
+        .collect();
+
+    // Remove // comments.
     for line in lines.iter_mut() {
-        let start_quote = line.find("\"");
-        let end_quote = line.rfind("\"");
+        comment_first_slash = false;
 
-        // This doesn't matter, /* and // are not valid chars.
-        // let start_single_quote = line.find("\'");
-        // let end_single_quote = line.rfind("\'");
+        let mut loc = -1_i32;
 
-        let start_block_comment = line.find("/*");
-        let end_block_comment = line.find("*/");
-
-        let comment = line.find("//");
-
-        match comment {
-            None => {}
-            Some(loc) => match (start_quote, end_quote) {
-                (Some(q1), Some(q2)) => {
-                    if !(loc > q1 && loc < q2) {
-                        line.replace_range(loc..line.len(), "");
-                    }
+        for (i, chr) in line.chars().enumerate() {
+            if chr == '"' {
+                in_quotes = !in_quotes;
+                comment_first_slash = false;
+            }
+            else if chr == '/' {
+                if !in_quotes && comment_first_slash {
+                    loc = (i as i32) - 1;
+                    break;
                 }
-                (_, _) => line.replace_range(loc..line.len(), ""),
-            },
-        }
-
-        //TODO This needs to handle non-matching block comments. (Throw an error)
-        if in_block_comment {
-            match (start_block_comment, end_block_comment) {
-                (Some(loc1), Some(loc2)) => {
-                    if loc1 > loc2 { // */ /*
-
-                    }
+                else if !in_quotes {
+                    comment_first_slash = true;
                 }
-                (_, Some(loc2)) => match (start_quote, end_quote) {
-                    (Some(q1), Some(q2)) => {
-                        if !(loc2 > q1 && loc2 < q2) {
-                            line.replace_range(0..(loc2 + 3), "");
-                            in_block_comment = false;
-                        }
-                    }
-                    (_, _) => {
-                        line.replace_range(0..(loc2 + 3), "");
-                        in_block_comment = false;
-                    }
-                },
-                (_, _) => {}
+            }
+            else {
+                comment_first_slash = false;
             }
         }
-        else {
-            match (start_block_comment, end_block_comment) {
-                (Some(loc1), Some(loc2)) => match (start_quote, end_quote) {
-                    (Some(q1), Some(q2)) => {
-                        if !(loc1 > q1 && loc1 < q2) && !(loc1 > q1 && loc1 < q2) {
-                            line.replace_range(loc1..(loc2 + 3), "");
-                        }
-                        else if !(loc1 > q1 && loc1 < q2) {
-                            line.replace_range(loc1..line.len(), "");
-                        }
-                    }
-                    (_, _) => line.replace_range(loc1..(loc2 + 3), ""),
-                },
-                (Some(loc1), _) => match (start_quote, end_quote) {
-                    (Some(q1), Some(q2)) => {
-                        if !(loc1 > q1 && loc1 < q2) {
-                            line.replace_range(loc1..line.len(), "");
-                            in_block_comment = true;
-                        }
-                    }
-                    (_, _) => {
-                        line.replace_range(loc1..line.len(), "");
-                        in_block_comment = true;
-                    }
-                },
-                (_, _) => {}
-            }
+
+        if loc >= 0 {
+            line.drain((loc as usize)..line.len());
         }
     }
 
-    Ok(())
+    let mut in_quotes = false;
+    let mut comment_first_slash = false;
+    let mut comment_first_star = false;
+    let mut in_block_comment = false;
+
+    // Remove /* */ comments.
+    let mut index = 0;
+    while index < lines.len() {
+        let line = match lines.get_mut(index) {
+            Some(l) => l,
+            None => {
+                error!("[FATAL] Compiler somehow left the lines vector range!");
+                exit(-1);
+            }
+        };
+
+        let mut loc1 = -1_i32;
+        let mut loc2 = -1_i32;
+
+        comment_first_slash = false;
+        comment_first_star = false;
+
+        for (i, chr) in line.chars().enumerate() {
+            if chr == '"' {
+                in_quotes = !in_quotes;
+                comment_first_slash = false;
+                comment_first_star = false;
+            }
+            else if chr == '/' {
+                if !in_quotes && comment_first_star && in_block_comment {
+                    loc2 = (i as i32) + 1;
+                    in_block_comment = false;
+                }
+                else if !in_quotes && comment_first_star {
+                    return Err(format!("Line {} has a */ without a matching /*.", index + 1));
+                }
+                else if !in_quotes {
+                    comment_first_slash = true;
+                }
+
+                comment_first_star = false;
+            }
+            else if chr == '*' {
+                if !in_quotes && comment_first_slash && !in_block_comment {
+                    loc1 = (i as i32) - 1;
+                    in_block_comment = true;
+                }
+                else if !in_quotes {
+                    comment_first_star = true;
+                }
+
+                comment_first_slash = false;
+            }
+            else {
+                comment_first_slash = false;
+                comment_first_star = false;
+            }
+        }
+
+        if loc1 >= 0 && loc2 >= 0 {
+            line.drain((loc1 as usize)..(loc2 as usize));
+            index -= 1;
+        }
+        else if loc1 >= 0 {
+            line.drain((loc1 as usize)..line.len());
+        }
+        else if loc2 >= 0 {
+            line.drain(0..(loc2 as usize));
+        }
+        else if in_block_comment {
+            line.drain(0..line.len());
+        }
+
+        index += 1;
+    }
+
+    Ok(lines.join("\n"))
 }

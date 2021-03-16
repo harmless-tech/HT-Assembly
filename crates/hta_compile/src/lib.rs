@@ -32,6 +32,7 @@ struct WriteData {
 }
 
 // Returns the binary file name on success.
+//TODO Allow for multiple errors to be returned.
 pub fn compile(hta_file: &str, dbg: bool) -> Result<String, String> {
     let compiler_version = match parse_version_str(option_env!("CARGO_PKG_VERSION").unwrap()) {
         Some(v) => {
@@ -45,16 +46,19 @@ pub fn compile(hta_file: &str, dbg: bool) -> Result<String, String> {
     };
 
     let contents = file::intake(hta_file)?;
-    let mut lines: Vec<String> = contents
-        .split("\n")
-        .map(|s| String::from(s.trim()))
-        .collect();
 
-    debug!("{}", lines.clone().join("\n"));
+    debug!("Size: {}", contents.clone().len());
+    debug!("\n{}", contents.clone());
 
-    compiler::remove_comments(&mut lines);
+    let stripped_contents = compiler::remove_comments(contents)?;
 
-    debug!("{}", lines.clone().join("\n"));
+    debug!("Size: {}", stripped_contents.clone().len());
+    debug!("\n{}", stripped_contents.clone());
+
+    // let mut lines: Vec<String> = contents
+    //     .split("\n")
+    //     .map(|s| String::from(s.trim()))
+    //     .collect();
 
     // debug!("{:?}", lines);
     //

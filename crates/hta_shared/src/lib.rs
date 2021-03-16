@@ -34,7 +34,7 @@ pub struct DebugData {
  * This struct holds the metadata of the HTA program.
  * This struct is created during compile time and then exported to the binary.
  * The runtime will then read in this data in during program startup.
- * This data is for the runtime only, there is no way to access it from HT Assembly.
+ * This data is for the runtime only, there is no way to access it from the HTA program.
  */
 #[derive(Clone, Debug)]
 pub struct MetaData {
@@ -45,7 +45,6 @@ pub struct MetaData {
     pub git: String,
     pub license: String,
     pub natives: Vec<NativeName>, // Required native libraries
-                                  // pub custom: Map<String, String> //TODO Add this later. Maybe?
 }
 
 /**
