@@ -1,12 +1,7 @@
 use hta_shared::{
-    hfs, traits::EnumWithU8, DataType, DebugData, Instructions, MetaData, Program, Tag,
-    TagMap,
+    hfs, traits::EnumWithU8, DataType, DebugData, Instructions, MetaData, Program, Tag, TagMap,
 };
-use std::{
-    collections::HashMap,
-    fs::File,
-    io::Write,
-};
+use std::{collections::HashMap, fs::File, io::Write};
 
 pub fn header(file: &mut File, header: &str) -> Result<(), String> {
     if header.len() <= 8 {

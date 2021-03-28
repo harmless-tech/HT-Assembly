@@ -1,5 +1,5 @@
 use log::error;
-use std::{process::exit};
+use std::process::exit;
 
 pub struct PreProcessorData {
     pub namespace: String,
