@@ -10,7 +10,6 @@ use std::{
     io::{Seek, SeekFrom},
     path::PathBuf,
 };
-use std::collections::HashMap;
 
 /* Steps:
  * Take in main file and process info.
@@ -30,12 +29,6 @@ struct WriteData {
     pub debug_data: Option<DebugData>,
     pub metadata: MetaData,
     pub program: Program,
-}
-
-struct PreProcessorData {
-    pub namespace: String,
-    pub imports: Vec<String>,
-    pub defines: HashMap<String, String>
 }
 
 // Returns the binary file name on success.
@@ -79,13 +72,14 @@ pub fn compile(hta_file: &str, dbg: bool) -> Result<String, String> {
 fn write_binary(data: &WriteData) -> Result<String, String> {
     hfs::error(fs::create_dir_all(BINARY_PATH))?;
 
-    let mut file = File::create(PathBuf::from(format!(
+    let path = format!(
         "{}{}{}",
         BINARY_PATH,
         data.build_data.0,
         hta_shared::FILE_EXT_BINARY
-    )))
-    .expect("Could not create a binary file to write to!");
+    );
+    let mut file = File::create(PathBuf::from(path.clone()))
+        .expect("Could not create a binary file to write to!");
 
     hfs::error_u64(file.seek(SeekFrom::Start(0)))?;
 
@@ -115,7 +109,7 @@ fn write_binary(data: &WriteData) -> Result<String, String> {
     // HTAEND
     writer::header(&mut file, "HTAEND")?;
 
-    Err("NOT IMPL".to_string())
+    Ok(format!("Binary written to {}.", path))
 }
 
 //TODO Own file?

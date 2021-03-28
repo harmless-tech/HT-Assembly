@@ -57,6 +57,7 @@ NEWLINE:
       cast u32;
       alloc h_int u32;
       regvar h_int;
+      dealloc h_int;
 
       alloc hello_slash str "Hello // World!"; // Remove me!
       alloc hello u128 20,000; // Commas are allowed in numeric values.

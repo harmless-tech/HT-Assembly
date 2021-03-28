@@ -59,6 +59,7 @@ pub struct Program {
 #[derive(Clone, Debug, PartialEq)]
 pub enum Instructions {
     Alloc(Variable, DataType),  // Variable, DataType, Optional<Data>
+    DeAlloc(Variable),          // Variable
     SetVar(Variable, DataType), // Variable, Data
     RegVar(Variable),           // Variable
     SetReg(Register, DataType), // Register, DataType, Optional<Data>
@@ -77,38 +78,40 @@ impl traits::EnumWithU8 for Instructions {
     fn to_u8(&self) -> u8 {
         match self {
             Instructions::Alloc(_, _) => 0,
-            Instructions::SetVar(_, _) => 1,
-            Instructions::RegVar(_) => 2,
-            Instructions::SetReg(_, _) => 3,
-            Instructions::VarReg(_, _) => 4,
-            Instructions::CpyReg(_, _) => 5,
-            Instructions::Op(_) => 6,
-            Instructions::Jmp(_) => 7,
-            Instructions::PushJmp(_) => 8,
-            Instructions::PopJmp => 9,
-            Instructions::Cast(_) => 10,
-            Instructions::Call(_) => 11,
-            Instructions::Exit(_) => 12,
-            Instructions::Assert(_) => 13,
+            Instructions::DeAlloc(_) => 1,
+            Instructions::SetVar(_, _) => 2,
+            Instructions::RegVar(_) => 3,
+            Instructions::SetReg(_, _) => 4,
+            Instructions::VarReg(_, _) => 5,
+            Instructions::CpyReg(_, _) => 6,
+            Instructions::Op(_) => 7,
+            Instructions::Jmp(_) => 8,
+            Instructions::PushJmp(_) => 9,
+            Instructions::PopJmp => 10,
+            Instructions::Cast(_) => 11,
+            Instructions::Call(_) => 12,
+            Instructions::Exit(_) => 13,
+            Instructions::Assert(_) => 14,
         }
     }
 
     fn from_u8(e: u8) -> Self {
         match e {
             0 => Instructions::Alloc(0, DataType::Char(0 as char)),
-            1 => Instructions::SetVar(0, DataType::Char(0 as char)),
-            2 => Instructions::RegVar(0),
-            3 => Instructions::SetReg(Register::C0, DataType::Char(0 as char)),
-            4 => Instructions::VarReg(0, Register::C0),
-            5 => Instructions::CpyReg(Register::C0, Register::C0),
-            6 => Instructions::Op(Operation::Logic(LogicOperation::Not)),
-            7 => Instructions::Jmp(0),
-            8 => Instructions::PushJmp(0),
-            9 => Instructions::PopJmp,
-            10 => Instructions::Cast(DataType::Char(0 as char)),
-            11 => Instructions::Call(0),
-            12 => Instructions::Exit(0),
-            13 => Instructions::Assert(None),
+            1 => Instructions::DeAlloc(0),
+            2 => Instructions::SetVar(0, DataType::Char(0 as char)),
+            3 => Instructions::RegVar(0),
+            4 => Instructions::SetReg(Register::C0, DataType::Char(0 as char)),
+            5 => Instructions::VarReg(0, Register::C0),
+            6 => Instructions::CpyReg(Register::C0, Register::C0),
+            7 => Instructions::Op(Operation::Logic(LogicOperation::Not)),
+            8 => Instructions::Jmp(0),
+            9 => Instructions::PushJmp(0),
+            10 => Instructions::PopJmp,
+            11 => Instructions::Cast(DataType::Char(0 as char)),
+            12 => Instructions::Call(0),
+            13 => Instructions::Exit(0),
+            14 => Instructions::Assert(None),
             _ => {
                 error!("Instruction not found, defaulting to Instruction Alloc!");
                 Instructions::Alloc(0, DataType::Char(0 as char))

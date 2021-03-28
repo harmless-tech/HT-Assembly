@@ -6,23 +6,29 @@
 This is the alpha language spec for HTA.
 Nothing here is final and info may be outdated.
 
+The compiler is currently missing many safety checks that will be added in the future.
+
 Compiling libraries that can be linked in later is currently not supported.
 Importing dlls/other libs to add more call functions is currently not supported.
 //
 
-There is a maximum to the amount of lines a program can have, but I don't know it.
+The current goal of HTA is to make an assembly language that uses a runtime
+and that has the compiler do safety checks.
 
 File Types:
 Programming file: .ha
 Binary file     : .hab
-Snapshot file   : .hasnap
-Exe file        : .hae //TODO Still don't know how a exe will work. (Or if there will even be one)
+Snapshot file   : .hasnap //TODO This may be dropped.
 
 Processing Order:
     - Remove line comments.
     - Remove block comments.
-    - Parse pre-processors.
-    - Parse tags and instructions.
+    - Parse and apply pre-processors.
+
+    - Import other files.
+    - Parse and apply their pre-processors.
+
+    - Parse and compile tags and instructions.
     - Check if links are all correct.
 
 //TODO Maybe?

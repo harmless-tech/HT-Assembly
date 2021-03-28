@@ -1,5 +1,10 @@
 use log::error;
-use std::process::exit;
+use std::{process::exit};
+
+pub struct PreProcessorData {
+    pub namespace: String,
+    pub imports: Vec<String>,
+}
 
 pub fn remove_comments(contents: String) -> Result<String, String> {
     let mut in_quotes = false;
@@ -74,7 +79,10 @@ pub fn remove_comments(contents: String) -> Result<String, String> {
                     in_block_comment = false;
                 }
                 else if !in_quotes && comment_first_star {
-                    return Err(format!("Line {} has a */ without a matching /*.", index + 1));
+                    return Err(format!(
+                        "Line {} has a */ without a matching /*.",
+                        index + 1
+                    ));
                 }
                 else if !in_quotes {
                     comment_first_slash = true;
@@ -117,4 +125,8 @@ pub fn remove_comments(contents: String) -> Result<String, String> {
     }
 
     Ok(lines.join("\n"))
+}
+
+pub fn pre_process_entry(contents: String) -> Result<(String, PreProcessorData), String> {
+    Err("NOT IMPL".to_string())
 }

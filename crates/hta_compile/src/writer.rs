@@ -1,13 +1,11 @@
 use hta_shared::{
-    hfs, hfs::error, traits::EnumWithU8, DataType, DebugData, Instructions, MetaData, Program, Tag,
+    hfs, traits::EnumWithU8, DataType, DebugData, Instructions, MetaData, Program, Tag,
     TagMap,
 };
 use std::{
-    any::{Any, TypeId},
     collections::HashMap,
     fs::File,
     io::Write,
-    ops::Deref,
 };
 
 pub fn header(file: &mut File, header: &str) -> Result<(), String> {
@@ -114,6 +112,7 @@ fn instructions(file: &mut File, data: &Vec<Vec<Instructions>>) -> Result<(), St
                     write_u64(file, *var)?;
                     data_type(file, dat)?;
                 }
+                Instructions::DeAlloc(var) => write_u64(file, *var)?,
                 Instructions::SetVar(var, dat) => {
                     write_u64(file, *var)?;
                     data_type(file, dat)?;
