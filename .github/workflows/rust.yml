@@ -23,22 +23,22 @@ jobs:
             ~/.cargo/git
             target
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+      - name: Update Rust
+        run: rustup update
       - name: Rust Version
         run: rustc --version
-      - name: Build
-        run: cargo build --verbose --workspace
       - name: Run tests
         run: cargo test --verbose --workspace
-      - name: Build Release
-        run: cargo build --verbose --workspace --release
+      - name: Build
+        run: cargo build --verbose --workspace
       - name: Artifact
         uses: actions/upload-artifact@v2
         with:
           name: artifacts-lin
           path: |
-            target/release/hta
-            target/release/*.so
-            target/release/*.a
+            target/debug/hta
+#            target/debug/*.so
+#            target/debug/*.a
 
   build-macos:
     runs-on: macos-latest
@@ -51,22 +51,22 @@ jobs:
             ~/.cargo/git
             target
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+      - name: Update Rust
+        run: rustup update
       - name: Rust Version
         run: rustc --version
-      - name: Build
-        run: cargo build --verbose --workspace
       - name: Run tests
         run: cargo test --verbose --workspace
-      - name: Build Release
-        run: cargo build --verbose --workspace --release
+      - name: Build
+        run: cargo build --verbose --workspace
       - name: Artifact
         uses: actions/upload-artifact@v2
         with:
           name: artifacts-mac
           path: |
-            target/release/hta
-            target/release/*.dylib
-            target/release/*.a
+            target/debug/hta
+#            target/debug/*.dylib
+#            target/debug/*.a
 
   build-windows:
     runs-on: windows-latest
@@ -79,20 +79,20 @@ jobs:
             ~/.cargo/git
             target
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+      - name: Update Rust
+        run: rustup update
       - name: Rust Version
         run: rustc --version
-      - name: Build
-        run: cargo build --verbose --workspace
       - name: Run tests
         run: cargo test --verbose --workspace
-      - name: Build Release
-        run: cargo build --verbose --workspace --release
+      - name: Build
+        run: cargo build --verbose --workspace
       - name: Artifact
         uses: actions/upload-artifact@v2
         with:
           name: artifacts-win
           path: |
-            target/release/hta.exe
-            target/release/*.dll
-            target/release/*.lib
-            !target/release/*.dll.lib
+            target/debug/hta.exe
+#            target/debug/*.dll
+#            target/debug/*.lib
+#            !target/debug/*.dll.lib

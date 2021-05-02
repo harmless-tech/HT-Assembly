@@ -1,0 +1,171 @@
+name: Rust Build, Test, and Release
+
+on:
+  push:
+    tags:
+      - "v**"
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  release:
+    needs: [ test-linux, test-macos, test-windows ]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-ecosystem/action-regex-match@v2
+        id: regex-tag
+        with:
+          text: ${{ github.ref }}
+          regex: '^refs\/tags\/v\d+\.\d+\.\d+$'
+      - name: Create release
+        uses: ncipollo/release-action@v1
+        with:
+          prerelease: ${{ steps.regex-tag.outputs.match == '' }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+  test-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+      - name: Update Rust
+        run: rustup update
+      - name: Rust Version
+        run: rustc --version
+      - name: Run tests
+        run: cargo test --verbose --workspace --release
+
+  test-macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+      - name: Update Rust
+        run: rustup update
+      - name: Rust Version
+        run: rustc --version
+      - name: Run tests
+        run: cargo test --verbose --workspace --release
+
+  test-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+      - name: Update Rust
+        run: rustup update
+      - name: Rust Version
+        run: rustc --version
+      - name: Run tests
+        run: cargo test --verbose --workspace --release
+
+  build-linux:
+    needs: [ release ]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+      - name: Update Rust
+        run: rustup update
+      - name: Rust Version
+        run: rustc --version
+      - name: Build
+        run: cargo build --verbose --workspace --release
+      - name: Zip
+        uses: papeloto/action-zip@v1
+        with:
+          files: ./target/release/hta
+          dest: hta-linux.zip
+      - name: Upload to release
+        uses: alexellis/upload-assets@0.3.0
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          asset_paths: '["hta-linux.zip"]'
+
+  build-macos:
+    needs: [ release ]
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+      - name: Update Rust
+        run: rustup update
+      - name: Rust Version
+        run: rustc --version
+      - name: Build
+        run: cargo build --verbose --workspace --release
+      - name: Zip
+        uses: papeloto/action-zip@v1
+        with:
+          files: ./target/release/hta
+          dest: hta-macos.zip
+      - name: Upload to release
+        uses: alexellis/upload-assets@0.3.0
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          asset_paths: '["hta-macos.zip"]'
+
+  build-windows:
+    needs: [ release ]
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: seanmiddleditch/gha-setup-ninja@master
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+      - name: Update Rust
+        run: rustup update
+      - name: Rust Version
+        run: rustc --version
+      - name: Build
+        run: cargo build --verbose --workspace --release
+      - name: Zip
+        uses: papeloto/action-zip@v1
+        with:
+          files: ./target/release/hta.exe
+          dest: hta-windows.zip
+      - name: Upload to release
+        uses: alexellis/upload-assets@0.3.0
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          asset_paths: '["hta-windows.zip"]'
