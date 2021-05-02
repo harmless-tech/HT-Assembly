@@ -71,7 +71,7 @@ pub fn metadata(file: &mut File, data: &MetaData) -> Result<(), String> {
     // natives
     write_u64(file, data.natives.len() as u64)?; // Amount of natives.
     for native in data.natives.iter() {
-        write_u64(file, *native)?;
+        write_string(file, &native)?;
     }
 
     Ok(())

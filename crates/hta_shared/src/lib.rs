@@ -44,7 +44,7 @@ pub struct MetaData {
     pub website: String,
     pub git: String,
     pub license: String,
-    pub natives: Vec<NativeName>, // Required native libraries
+    pub natives: Vec<String>, // Required native libraries
 }
 
 /**

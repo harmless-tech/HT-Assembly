@@ -77,7 +77,7 @@ Structs:
 //TODO Not in milestone/mark 1/m1.
 
 Tags:
-Allows a program to jump to that location.
+Allows a program to jump to that location. Must be on their own line.
   - TAG_NAME:
 
 Commands:

@@ -51,7 +51,7 @@ fn main() {
     }
 
     //TODO Remove!
-    match hta_compile::compile("assembly-tests/m1/main.ha", true) {
+    match hta_compile::compile("assembly-tests/m1/main.ha", "main.ha", true) {
         Ok(filename) => info!("[SUCCESS] Compiled binary file is at {}.", filename),
         Err(err) => {
             error!("[FAILED] {}", err);

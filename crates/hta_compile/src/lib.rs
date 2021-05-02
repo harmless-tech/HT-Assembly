@@ -21,19 +21,37 @@ use std::{
  */
 
 static BINARY_PATH: &str = "build/bin/";
-static DEFAULT_FILE_NAME: &str = "main";
+static DEFAULT_BINARY_NAME: &str = "main";
 
-struct WriteData {
+#[derive(Debug)]
+pub struct WriteData {
     pub build_data: (String, String), // Right now this is just a file name. (File Name, EMPTY)
     pub compiler_version: (u64, u64, u64),
-    pub debug_data: Option<DebugData>,
+    // pub debug_data: Option<DebugData>, This will be passed separately.
     pub metadata: MetaData,
-    pub program: Program,
+    // pub program: Program, This will be passed separately.
+}
+impl WriteData {
+    fn new(compiler_version: (u64, u64, u64)) -> Self {
+        WriteData {
+            build_data: (DEFAULT_BINARY_NAME.clone().to_string(), "".to_string()),
+            compiler_version,
+            metadata: MetaData {
+                name: "".to_string(),
+                authors: vec![],
+                version: "".to_string(),
+                website: "".to_string(),
+                git: "".to_string(),
+                license: "".to_string(),
+                natives: vec!["std".to_string()]
+            }
+        }
+    }
 }
 
 // Returns the binary file name on success.
 //TODO Allow for multiple errors to be returned.
-pub fn compile(hta_file: &str, dbg: bool) -> Result<String, String> {
+pub fn compile(hta_file: &str, hta_file_name: &str, dbg: bool) -> Result<String, String> {
     let compiler_version = match parse_version_str(option_env!("CARGO_PKG_VERSION").unwrap()) {
         Some(v) => {
             info!("HTA Compiler Version: {}.{}.{}", v.0, v.1, v.2);
@@ -47,15 +65,21 @@ pub fn compile(hta_file: &str, dbg: bool) -> Result<String, String> {
 
     // Process the entry file.
     let contents = file::intake(hta_file)?; // Import the entry file.
-    let contents = compiler::remove_comments(contents)?; // Strip comments from entry file.
+    let contents = compiler::remove_comments(hta_file_name, contents)?; // Strip comments from entry file.
 
     debug!("Size: {}", contents.clone().len());
-    debug!("\n{}", contents.clone());
+    debug!("REMOVE COMMENTS: \n{}", contents.clone());
 
-    // let mut lines: Vec<String> = contents
-    //     .split("\n")
-    //     .map(|s| String::from(s.trim()))
-    //     .collect();
+    let mut lines: Vec<String> = contents
+        .split("\n")
+        .map(|s| String::from(s.trim()))
+        .collect();
+
+    let mut write_data = WriteData::new(compiler_version);
+    compiler::pre_process_entry(&mut write_data, hta_file_name, &mut lines)?;
+
+    debug!("REMOVE ENTRY PRE STATEMENTS: \n{}", lines.clone().join("\n"));
+    debug!("WRITE DATA: {:?}", write_data);
 
     // debug!("{:?}", lines);
     //
@@ -69,7 +93,7 @@ pub fn compile(hta_file: &str, dbg: bool) -> Result<String, String> {
     Err("NOT IMPL".to_string())
 }
 
-fn write_binary(data: &WriteData) -> Result<String, String> {
+fn write_binary(data: &WriteData, debug_data: &Option<DebugData>, program: &Program) -> Result<String, String> {
     hfs::error(fs::create_dir_all(BINARY_PATH))?;
 
     let path = format!(
@@ -90,7 +114,7 @@ fn write_binary(data: &WriteData) -> Result<String, String> {
     writer::version(&mut file, data.compiler_version)?;
 
     // DBG
-    match &data.debug_data {
+    match &debug_data {
         None => info!("No debug data is being written to the binary."),
         Some(dbg) => {
             writer::header(&mut file, "DBG")?;
@@ -104,7 +128,7 @@ fn write_binary(data: &WriteData) -> Result<String, String> {
 
     // PROGRAM
     writer::header(&mut file, "PROGRAM")?;
-    writer::program(&mut file, &data.program)?;
+    writer::program(&mut file, &program)?;
 
     // HTAEND
     writer::header(&mut file, "HTAEND")?;

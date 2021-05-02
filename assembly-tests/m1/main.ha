@@ -41,7 +41,7 @@
 
 // For m1 all instructions need to be on their own line.
 
-ENTRY: // The ENTRY tag will be the start of the program. !!! This must be in the entry file !!!
+ENTRY: // The ENTRY tag will be the start of the program. !!! This must be in the entry file and there can only be one. !!!
       alloc hello str "Hello, World!";
       alloc hello str HELLO_STR; // This is valid, the var will be reallocated with the type.
       varreg hello $2;
