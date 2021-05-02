@@ -3,15 +3,29 @@ mod logging;
 
 use log::{debug, error, info, trace, warn};
 use std::env;
-
-use crate::logging::setup_log;
 use std::process::exit;
 
-//TODO Allow for optional args. (--debug, --binary)
+#[cfg(debug_assertions)]
+const DEBUG_BUILD: bool = true;
+#[cfg(not(debug_assertions))]
+const DEBUG_BUILD: bool = false;
+
+//TODO Allow for optional args. (--binary)
 //TODO Built in formatter?
 fn main() {
+    let mut args = std::env::args();
+    let debug = (DEBUG_BUILD && !args.any(|s| s.eq("--release"))) || (!DEBUG_BUILD && args.any(|s| s.eq("--debug")));
+
     // Logging
-    setup_log();
+    let _logging = logging::setup_log(debug); //TODO Logging returns a result?
+    info!("Logging Level Check");
+    info!("TRUE");
+    warn!("TRUE");
+    error!("TRUE");
+    debug!("TRUE");
+    trace!("TRUE");
+    info!("Logging Level Check - Done!");
+
     let hta_version = match option_env!("CARGO_PKG_VERSION") {
         Some(v) => v,
         None => {
@@ -51,7 +65,7 @@ fn main() {
     }
 
     //TODO Remove!
-    match hta_compile::compile("assembly-tests/m1/main.ha", "main.ha", true) {
+    match hta_compile::compile("assembly-tests/m1/main.ha", "main.ha", debug) {
         Ok(filename) => info!("[SUCCESS] Compiled binary file is at {}.", filename),
         Err(err) => {
             error!("[FAILED] {}", err);

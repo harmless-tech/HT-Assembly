@@ -1,3 +1,5 @@
+#![allow(dead_code)] //TODO Remove!
+
 use hta_shared::{
     hfs, traits::EnumWithU8, DataType, DebugData, Instructions, MetaData, Program, Tag, TagMap,
 };
@@ -132,7 +134,7 @@ fn instructions(file: &mut File, data: &Vec<Vec<Instructions>>) -> Result<(), St
                 Instructions::Cast(dat) => data_type(file, dat)?,
                 Instructions::Call(nat) => write_u64(file, *nat)?,
                 Instructions::Exit(code) => write_i32(file, *code)?,
-                Instructions::Assert(op_dat) => {
+                Instructions::Assert(_op_dat) => {
                     return Err("The Instruction Assert is not supported yet!".to_string())
                 }
             }

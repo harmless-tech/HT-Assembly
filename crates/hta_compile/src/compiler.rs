@@ -3,10 +3,14 @@ use std::process::exit;
 use crate::WriteData;
 use hta_shared::version;
 
+fn err_message<T>(file_name: &str, line_num: usize, message: &str) -> Result<T, String> {
+    Err(format!("File: {}, Line: {}: {}", file_name, line_num + 1, message))
+}
+
 //TODO Should this use borrowing instead for contents?
 pub fn remove_comments(file_name: &str, contents: String) -> Result<String, String> {
     let mut in_quotes = false;
-    let mut comment_first_slash = false;
+    let mut comment_first_slash;
 
     let mut lines: Vec<String> = contents
         .split("\n")
@@ -44,8 +48,8 @@ pub fn remove_comments(file_name: &str, contents: String) -> Result<String, Stri
     }
 
     let mut in_quotes = false;
-    let mut comment_first_slash = false;
-    let mut comment_first_star = false;
+    let mut comment_first_slash;
+    let mut comment_first_star;
     let mut in_block_comment = false;
 
     // Remove /* */ comments.
@@ -54,7 +58,7 @@ pub fn remove_comments(file_name: &str, contents: String) -> Result<String, Stri
         let line = match lines.get_mut(index) {
             Some(l) => l,
             None => {
-                error!("[FATAL] Compiler somehow left the lines vector range!");
+                error!("[FATAL] Compiler somehow left the lines vector range! (compiler::remove_comments())");
                 exit(-1);
             }
         };
@@ -77,7 +81,7 @@ pub fn remove_comments(file_name: &str, contents: String) -> Result<String, Stri
                     in_block_comment = false;
                 }
                 else if !in_quotes && comment_first_star {
-                    return Err(format!("Line {}, in file {}, has a */ without a matching /*.", index + 1, file_name));
+                    return err_message(file_name, index, "There is a '*/' without a matching '/*'.");
                 }
                 else if !in_quotes {
                     comment_first_slash = true;
@@ -134,11 +138,11 @@ pub fn pre_process_entry(write_data: &mut WriteData, file_name: &str, lines: &mu
                         write_data.build_data.0 = spilt.get(2).unwrap().clone();
                     }
                     else {
-                        return Err(format!("Line {}, in file {}: #BUILD does not have a valid second argument.", index + 1, file_name));
+                        return err_message(file_name, index, "'#BUILD' does not have a valid second argument.");
                     }
                 }
                 else {
-                    return Err(format!("Line {}, in file {}: #BUILD should only have 3 arguments.", index + 1, file_name));
+                    return err_message(file_name, index, "'#BUILD' should always have 3 arguments.");
                 }
             }
             else if spilt.get(0).unwrap().eq("#INFO") {
@@ -166,34 +170,34 @@ pub fn pre_process_entry(write_data: &mut WriteData, file_name: &str, lines: &mu
                         }
                     }
                     else {
-                        return Err(format!("Line {}, in file {}: #INFO ARG should only have 3 args.", index + 1, file_name));
+                        return err_message(file_name, index, "'#INFO ARG' should only have 3 args.");
                     }
                 }
                 else {
-                    return Err(format!("Line {}, in file {}: #INFO should only have 3 arguments. Unless its for name, authors, or license.", index + 1, file_name));
+                    return err_message(file_name, index, "'#INFO' should only have 3 arguments. Unless it is for name, authors, or license.");
                 }
             }
             else if spilt.get(0).unwrap().eq("#REQUIRE") {
                 if spilt.len() == 3 {
                     if spilt.get(1).unwrap().eq("hta_version") {
                         let v = match version::parse_version_str(spilt.get(2).unwrap()) {
-                            None => return Err(format!("Line {}, in file {}: #REQUIRE hta_version has invalid third arg. Should be in format x.x.x", index + 1, file_name)),
+                            None => return err_message(file_name, index, "'#REQUIRE hta_version' has invalid third arg. Should be in format 'x.x.x.'"),
                             Some(v) => v,
                         };
 
                         if !version::is_version_ge(write_data.compiler_version, v) {
-                            return Err(format!("Line {}, in file {}: #REQUIRE hta_version is less then the compiler version, please either increase the version or use an older compiler.", index + 1, file_name))
+                            return err_message(file_name, index, "'#REQUIRE hta_version' is less then the compiler version, please either increase the version or use an older compiler.");
                         }
                     }
                     else if spilt.get(1).unwrap().eq("native_lib") {
-                        return Err(format!("Line {}, in file {}: #REQUIRE native_lib is not implemented.", index + 1, file_name));
+                        return err_message(file_name, index, "#REQUIRE native_lib is not implemented.");
                     }
                     else {
-                        return Err(format!("Line {}, in file {}: #REQUIRE does not have a valid second argument.", index + 1, file_name));
+                        return err_message(file_name, index, "'#REQUIRE' does not have a valid second argument.");
                     }
                 }
                 else {
-                    return Err(format!("Line {}, in file {}: #REQUIRE should only have 3 arguments.", index + 1, file_name));
+                    return err_message(file_name, index, "'#REQUIRE' should only have 3 arguments.");
                 }
             }
 

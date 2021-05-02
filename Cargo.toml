@@ -1,6 +1,6 @@
 [package]
 name = "hta"
-version = "0.0.2"
+version = "0.0.1"
 authors = ["harmless-tech"]
 edition = "2018"
 description = "An open source assembly language that uses a runtime."
