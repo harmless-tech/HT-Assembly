@@ -1,7 +1,7 @@
 [package]
 name = "hta_std"
 version = "0.0.1"
-authors = ["Harmless_Tech (harmless-tech)"]
+authors = ["harmless-tech"]
 edition = "2018"
 description = "The standard library for ht assembly."
 documentation = "TODO URL"
@@ -13,8 +13,8 @@ license-file = "../../LICENSE"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
-[lib]
-crate-type = ["rlib", "staticlib", "dylib"]
+#[lib]
+#crate-type = ["rlib", "staticlib", "dylib"]
 
 [dependencies]
-log = "0.4.13"
+log = "0.4.14"
