@@ -11,6 +11,7 @@ use std::{
     path::PathBuf,
     thread,
 };
+use std::thread::JoinHandle;
 
 /* Steps:
  * Take in main file and process info.
@@ -73,8 +74,8 @@ pub fn compile(
     let contents = file::intake(hta_file)?; // Import the entry file.
     let contents = compiler::remove_comments(hta_file_name, contents)?; // Strip comments from entry file.
 
-    debug!("Size: {}", contents.clone().len());
-    debug!("REMOVE COMMENTS: \n{}", contents.clone());
+    // debug!("Size: {}", contents.clone().len());
+    // debug!("REMOVE COMMENTS: \n{}", contents.clone());
 
     let mut lines: Vec<String> = contents
         .split("\n")
@@ -82,21 +83,52 @@ pub fn compile(
         .collect();
 
     let mut write_data = WriteData::new(compiler_version);
-    let imports = compiler::pre_process_entry(&mut write_data, hta_file_name, &mut lines)?;
+    let mut imports = compiler::pre_process_entry(&mut write_data, hta_file_name, &mut lines)?;
+    imports.remove(0);
+    let imports = imports;
 
-    debug!(
-        "REMOVE ENTRY PRE STATEMENTS: \n{}",
-        lines.clone().join("\n")
-    );
-    debug!("WRITE DATA: {:?}", write_data);
-    debug!("IMPORTS: {:?}", imports);
+    // debug!(
+    //     "REMOVE ENTRY PRE STATEMENTS: \n{}",
+    //     lines.clone().join("\n")
+    // );
+    // debug!("WRITE DATA: {:?}", write_data);
+    // debug!("IMPORTS: {:?}", imports);
 
-    // TODO Map file to number.
+    // Process every file on a different thread.
+    let mut ns_threads: Vec<JoinHandle<Result<(String, String, Vec<String>), String>>> = Vec::new();
+    for file in imports.iter() {
+        let file = file.clone();
+        let path = format!("{}/{}", hta_project_path.clone(), file.clone());
 
-    // Process every file.
-    // Do linking stuff and checks.
+        ns_threads.push(thread::spawn(move || {
+            let f = file::intake(path.as_str())?;
+            let contents = compiler::remove_comments(file.as_str(), f)?;
 
-    let handle = thread::spawn(|| {});
+            let mut lines: Vec<String> = contents.split("\n").map(|s| String::from(s.trim())).collect();
+            let namespace = compiler::pre_process(file.as_str(), &mut lines)?;
+
+            Ok((file, namespace, lines))
+        }));
+    }
+
+    // Process entry on main thread.
+    let ns = compiler::pre_process(hta_file_name, &mut lines)?;
+    let mut entry = (hta_file_name.to_string(), ns, lines);
+
+    let mut p_files = Vec::new();
+    for handle in ns_threads {
+        let v = handle.join().unwrap()?;
+        p_files.push(v);
+    }
+
+    debug!("ENTRY: {:?}", entry.clone());
+    debug!("REST: {:?}", p_files.clone());
+
+    //TODO
+    // Process entry and other files
+    // Link
+
+    //TODO Don't forget to process \n and \t within strings.
 
     // debug!("{:?}", lines);
     //

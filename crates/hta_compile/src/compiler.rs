@@ -2,6 +2,8 @@ use crate::WriteData;
 use hta_shared::version;
 use log::error;
 use std::process::exit;
+use std::path::Path;
+use log::debug;
 
 fn err_message<T>(file_name: &str, line_num: usize, message: &str) -> Result<T, String> {
     Err(format!(
@@ -161,7 +163,7 @@ pub fn pre_process_entry(
                         return err_message(
                             file_name,
                             index,
-                            "'#BUILD' does not have a valid second argument.",
+                            "'#BUILD' does not have a valid first argument.",
                         );
                     }
                 }
@@ -169,7 +171,7 @@ pub fn pre_process_entry(
                     return err_message(
                         file_name,
                         index,
-                        "'#BUILD' should always have 3 arguments.",
+                        "'#BUILD' should always have 2 arguments.",
                     );
                 }
             }
@@ -208,19 +210,19 @@ pub fn pre_process_entry(
                         return err_message(
                             file_name,
                             index,
-                            "'#INFO ARG' should only have 3 args.",
+                            "'#INFO ARG' should only have 2 arguments. Unless it is for name, authors, or license.",
                         );
                     }
                 }
                 else {
-                    return err_message(file_name, index, "'#INFO' should only have 3 arguments. Unless it is for name, authors, or license.");
+                    return err_message(file_name, index, "'#INFO' needs at least 2 arguments.");
                 }
             }
             else if spilt.get(0).unwrap().eq("#REQUIRE") {
                 if spilt.len() == 3 {
                     if spilt.get(1).unwrap().eq("hta_version") {
                         let v = match version::parse_version_str(spilt.get(2).unwrap()) {
-                            None => return err_message(file_name, index, "'#REQUIRE hta_version' has invalid third arg. Should be in format 'x.x.x.'"),
+                            None => return err_message(file_name, index, "'#REQUIRE hta_version' has invalid second arg. Should be in format 'x.x.x.'"),
                             Some(v) => v,
                         };
 
@@ -239,7 +241,7 @@ pub fn pre_process_entry(
                         return err_message(
                             file_name,
                             index,
-                            "'#REQUIRE' does not have a valid second argument.",
+                            "'#REQUIRE' does not have a valid first argument.",
                         );
                     }
                 }
@@ -247,7 +249,7 @@ pub fn pre_process_entry(
                     return err_message(
                         file_name,
                         index,
-                        "'#REQUIRE' should only have 3 arguments.",
+                        "'#REQUIRE' should only have 2 arguments.",
                     );
                 }
             }
@@ -273,7 +275,7 @@ pub fn pre_process_entry(
                     return err_message(
                         file_name,
                         index,
-                        "'#IMPORT' should only have 2 arguments.",
+                        "'#IMPORT' should only have 1 arguments.",
                     );
                 }
             }
@@ -285,9 +287,51 @@ pub fn pre_process_entry(
     Ok(imports)
 }
 
-pub fn pre_process_namespace(
-    file_name: &str,
-    lines: &mut Vec<String>,
-) -> Result<(String, Vec<String>), String> {
-    unimplemented!();
+pub fn pre_process(path: &str, lines: &mut Vec<String>) -> Result<String, String> {
+    let file = Path::new(path);
+    let mut file_name = file.file_name().unwrap().to_str().unwrap().to_string();
+    file_name.drain((file_name.len() - file.extension().unwrap().len() - 1)..file_name.len());
+    let mut namespace = (file_name, false);
+
+    //let mut define_map = Vec::new();
+    for (index, line) in lines.iter_mut().enumerate() {
+        if line.starts_with("#") {
+            if line.starts_with("#NAMESPACE") || line.starts_with("#DEFINE") {
+                let spilt: Vec<&str> = line.split_whitespace().collect();
+                let spilt: Vec<String> = spilt.iter().map(|s| s.to_string()).collect();
+
+                if line.starts_with("#NAMESPACE") {
+                    if spilt.len() == 2 {
+                        if namespace.1 {
+                            return err_message(path, index, "'#NAMESPACE' was already used.");
+                        }
+
+                        namespace.0 = spilt.get(1).unwrap().clone();
+                        namespace.1 = true;
+                    }
+                    else {
+                        return err_message(path, index, "'#NAMESPACE' should only have one argument.");
+                    }
+                }
+                else if line.starts_with("#DEFINE") {
+                    if spilt.len() == 3 {
+                        unimplemented!();
+                    }
+                    else {
+                        return err_message(path, index, "'#DEFINE' should have at least 2 arguments.");
+                    }
+                }
+                else {
+                    return err_message(path, index, "Pre-Processor statement is not recognised.");
+                }
+
+                line.drain(0..line.len());
+            }
+        }
+        else {
+            //TODO Define stuff.
+        }
+    }
+
+    Ok(namespace.0)
 }

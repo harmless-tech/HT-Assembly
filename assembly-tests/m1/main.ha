@@ -37,7 +37,8 @@
 // !!! Any File !!!
 #NAMESPACE main
 
-#DEFINE HELLO_STR "Hello there!" // This only applies to this file. Replaces anything that matches! (Even things in quotes)
+//TODO Enable.
+//#DEFINE HELLO_STR "Hello there!" // This only applies to this file. Replaces anything that matches! (Even things in quotes)
 
 // For m1 all instructions need to be on their own line.
 
