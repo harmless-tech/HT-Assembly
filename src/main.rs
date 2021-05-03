@@ -2,8 +2,7 @@ mod logging;
 //mod tests; TODO tests.
 
 use log::{debug, error, info, trace, warn};
-use std::env;
-use std::process::exit;
+use std::{env, process::exit};
 
 #[cfg(debug_assertions)]
 const DEBUG_BUILD: bool = true;
@@ -14,7 +13,8 @@ const DEBUG_BUILD: bool = false;
 //TODO Built in formatter?
 fn main() {
     let mut args = std::env::args();
-    let debug = (DEBUG_BUILD && !args.any(|s| s.eq("--release"))) || (!DEBUG_BUILD && args.any(|s| s.eq("--debug")));
+    let debug = (DEBUG_BUILD && !args.any(|s| s.eq("--release")))
+        || (!DEBUG_BUILD && args.any(|s| s.eq("--debug")));
 
     // Logging
     let _logging = logging::setup_log(debug); //TODO Logging returns a result?
@@ -65,7 +65,12 @@ fn main() {
     }
 
     //TODO Remove!
-    match hta_compile::compile("assembly-tests/m1/main.ha", "main.ha", debug) {
+    match hta_compile::compile(
+        "assembly-tests/m1/main.ha",
+        "main.ha",
+        "assembly-tests/m1",
+        debug,
+    ) {
         Ok(filename) => info!("[SUCCESS] Compiled binary file is at {}.", filename),
         Err(err) => {
             error!("[FAILED] {}", err);

@@ -34,6 +34,7 @@ Processing Order:
 //TODO Maybe?
 Entry:
 A program's entry point starts at the "ENTRY:" tag.
+The entry file also doubles has the project file.
 
 Pre-Processors:
 Pre-Processors start with a #. They must be on their own line, and comments can only come after all values are defined.
@@ -53,9 +54,10 @@ Pre-Processors start with a #. They must be on their own line, and comments can 
   Entry file only!
   Imposes requirements on the HTA file. Not required, but highly suggested.
     - hta_version VERSION MAJOR.MINOR.PATCH :: COMPILER_VERSION :: Sets the required or greater HTA version to compile this program. :: #REQUIRE hta_version 0.0.1
+  - IMPORT FILE_NAME :: NO DEFAULT :: Tells the compiler to compile another file from which elements are required from. Makes it accessible to the whole project. :: #IMPORT structs.ha OR #IMPORT add.ha
+  Entry file only!
   - NAMESPACE NAME :: NAME_OF_FILE :: Sets the namespace to which all tags and vars in the file will have. :: #NAMESPACE ht
   This would add the namespace onto the tags and vars in the file. This allows for them to be accessed from other files.
-  - IMPORT FILE_NAME :: NO DEFAULT :: Tells the compiler to compile another file from which elements are required from. :: #IMPORT structs.ha OR #IMPORT add.ha
   - DEFINE [NAME VALUES]
     - name VALUES :: none :: Replaces every instance of name with VALUES after it is defined. (NOT RECOMMEND) This can cause a lot of UB. :: #DEFINE HELLO_STR "Hello!"
 

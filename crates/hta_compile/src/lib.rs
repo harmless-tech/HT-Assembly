@@ -9,6 +9,7 @@ use std::{
     fs::File,
     io::{Seek, SeekFrom},
     path::PathBuf,
+    thread,
 };
 
 /* Steps:
@@ -20,6 +21,8 @@ use std::{
  * Create binary.
  */
 
+//TODO Compiler should do a lot more safety checks.
+
 static BINARY_PATH: &str = "build/bin/";
 static DEFAULT_BINARY_NAME: &str = "main";
 
@@ -27,9 +30,7 @@ static DEFAULT_BINARY_NAME: &str = "main";
 pub struct WriteData {
     pub build_data: (String, String), // Right now this is just a file name. (File Name, EMPTY)
     pub compiler_version: (u64, u64, u64),
-    // pub debug_data: Option<DebugData>, This will be passed separately.
     pub metadata: MetaData,
-    // pub program: Program, This will be passed separately.
 }
 impl WriteData {
     fn new(compiler_version: (u64, u64, u64)) -> Self {
@@ -43,15 +44,20 @@ impl WriteData {
                 website: "".to_string(),
                 git: "".to_string(),
                 license: "".to_string(),
-                natives: vec!["std".to_string()]
-            }
+                natives: vec!["std".to_string()],
+            },
         }
     }
 }
 
 // Returns the binary file name on success.
-//TODO Allow for multiple errors to be returned.
-pub fn compile(hta_file: &str, hta_file_name: &str, dbg: bool) -> Result<String, String> {
+//TODO Allow for multiple errors to be returned?
+pub fn compile(
+    hta_file: &str,
+    hta_file_name: &str,
+    hta_project_path: &str,
+    dbg: bool,
+) -> Result<String, String> {
     let compiler_version = match parse_version_str(option_env!("CARGO_PKG_VERSION").unwrap()) {
         Some(v) => {
             info!("HTA Compiler Version: {}.{}.{}", v.0, v.1, v.2);
@@ -76,10 +82,21 @@ pub fn compile(hta_file: &str, hta_file_name: &str, dbg: bool) -> Result<String,
         .collect();
 
     let mut write_data = WriteData::new(compiler_version);
-    compiler::pre_process_entry(&mut write_data, hta_file_name, &mut lines)?;
+    let imports = compiler::pre_process_entry(&mut write_data, hta_file_name, &mut lines)?;
 
-    debug!("REMOVE ENTRY PRE STATEMENTS: \n{}", lines.clone().join("\n"));
+    debug!(
+        "REMOVE ENTRY PRE STATEMENTS: \n{}",
+        lines.clone().join("\n")
+    );
     debug!("WRITE DATA: {:?}", write_data);
+    debug!("IMPORTS: {:?}", imports);
+
+    // TODO Map file to number.
+
+    // Process every file.
+    // Do linking stuff and checks.
+
+    let handle = thread::spawn(|| {});
 
     // debug!("{:?}", lines);
     //
@@ -93,7 +110,11 @@ pub fn compile(hta_file: &str, hta_file_name: &str, dbg: bool) -> Result<String,
     Err("NOT IMPL".to_string())
 }
 
-fn write_binary(data: &WriteData, debug_data: &Option<DebugData>, program: &Program) -> Result<String, String> {
+fn write_binary(
+    data: &WriteData,
+    debug_data: &Option<DebugData>,
+    program: &Program,
+) -> Result<String, String> {
     hfs::error(fs::create_dir_all(BINARY_PATH))?;
 
     let path = format!(
@@ -136,7 +157,6 @@ fn write_binary(data: &WriteData, debug_data: &Option<DebugData>, program: &Prog
     Ok(format!("Binary written to {}.", path))
 }
 
-//TODO Own file?
 mod file {
     use std::fs;
 

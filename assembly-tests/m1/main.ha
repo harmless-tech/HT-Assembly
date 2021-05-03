@@ -32,10 +32,10 @@
 //#REQUIRE native_lib std  // For now the std lib is imported by default.
 //#REQUIRE native_lib NAME // Requires a native lib. (Not implemented in m1, except for std!)
 
+#IMPORT add/add.ha // Imports the file add.ha into the project so it can be called by any file. (Using its namespace)
+
 // !!! Any File !!!
 #NAMESPACE main
-
-#IMPORT add.ha // Imports the file add.ha. (add.ha will keep its namespace though!) Kinda like c/c++ #include.
 
 #DEFINE HELLO_STR "Hello there!" // This only applies to this file. Replaces anything that matches! (Even things in quotes)
 
