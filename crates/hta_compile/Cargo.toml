@@ -17,6 +17,7 @@ license-file = "../../LICENSE"
 #crate-type = ["rlib", "staticlib", "dylib"]
 
 [dependencies]
+aho-corasick = "0.7.18"
 hta_shared = { path = "../hta_shared" }
 hta_std = { path = "../hta_std" }
 log = "0.4.14"

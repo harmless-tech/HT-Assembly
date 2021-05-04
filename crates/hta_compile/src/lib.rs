@@ -10,8 +10,8 @@ use std::{
     io::{Seek, SeekFrom},
     path::PathBuf,
     thread,
+    thread::JoinHandle,
 };
-use std::thread::JoinHandle;
 
 /* Steps:
  * Take in main file and process info.
@@ -104,7 +104,10 @@ pub fn compile(
             let f = file::intake(path.as_str())?;
             let contents = compiler::remove_comments(file.as_str(), f)?;
 
-            let mut lines: Vec<String> = contents.split("\n").map(|s| String::from(s.trim())).collect();
+            let mut lines: Vec<String> = contents
+                .split("\n")
+                .map(|s| String::from(s.trim()))
+                .collect();
             let namespace = compiler::pre_process(file.as_str(), &mut lines)?;
 
             Ok((file, namespace, lines))

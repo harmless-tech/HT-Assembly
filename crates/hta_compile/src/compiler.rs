@@ -1,9 +1,8 @@
 use crate::WriteData;
+use aho_corasick::AhoCorasick;
 use hta_shared::version;
-use log::error;
-use std::process::exit;
-use std::path::Path;
-use log::debug;
+use log::{debug, error};
+use std::{collections::HashMap, path::Path, process::exit};
 
 fn err_message<T>(file_name: &str, line_num: usize, message: &str) -> Result<T, String> {
     Err(format!(
@@ -293,7 +292,9 @@ pub fn pre_process(path: &str, lines: &mut Vec<String>) -> Result<String, String
     file_name.drain((file_name.len() - file.extension().unwrap().len() - 1)..file_name.len());
     let mut namespace = (file_name, false);
 
-    //let mut define_map = Vec::new();
+    let mut define_map = HashMap::new();
+    let mut ac = AhoCorasick::new(&[] as &[String]);
+
     for (index, line) in lines.iter_mut().enumerate() {
         if line.starts_with("#") {
             if line.starts_with("#NAMESPACE") || line.starts_with("#DEFINE") {
@@ -310,15 +311,32 @@ pub fn pre_process(path: &str, lines: &mut Vec<String>) -> Result<String, String
                         namespace.1 = true;
                     }
                     else {
-                        return err_message(path, index, "'#NAMESPACE' should only have one argument.");
+                        return err_message(
+                            path,
+                            index,
+                            "'#NAMESPACE' should only have one argument.",
+                        );
                     }
                 }
                 else if line.starts_with("#DEFINE") {
-                    if spilt.len() == 3 {
-                        unimplemented!();
+                    if spilt.len() >= 3 {
+                        line.drain(0.."#DEFINE".len());
+
+                        let mut var = line.trim_start().to_string();
+                        var.drain(0..spilt.get(1).unwrap().len());
+                        let var = var.trim_start().to_string();
+
+                        define_map.insert(spilt.get(1).unwrap().clone(), var);
+
+                        let patterns = define_map.keys();
+                        ac = AhoCorasick::new(patterns);
                     }
                     else {
-                        return err_message(path, index, "'#DEFINE' should have at least 2 arguments.");
+                        return err_message(
+                            path,
+                            index,
+                            "'#DEFINE' should have at least 2 arguments.",
+                        );
                     }
                 }
                 else {
@@ -329,7 +347,17 @@ pub fn pre_process(path: &str, lines: &mut Vec<String>) -> Result<String, String
             }
         }
         else {
-            //TODO Define stuff.
+            // Find
+            let mut matches = Vec::new();
+            for mat in ac.find_iter(line) {
+                matches.push((mat.pattern(), mat.start(), mat.end()));
+            }
+
+            // Replace
+            let values: Vec<&String> = define_map.values().collect();
+            for mat in matches.iter() {
+                line.replace_range(mat.1..mat.2, values.get(mat.0).unwrap().as_str());
+            }
         }
     }
 
