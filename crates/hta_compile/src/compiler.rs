@@ -1,6 +1,6 @@
 use crate::WriteData;
 use aho_corasick::AhoCorasick;
-use hta_shared::version;
+use hta_shared::{version, Instructions, Tag, TagMap};
 use log::{debug, error};
 use std::{collections::HashMap, path::Path, process::exit};
 
@@ -301,6 +301,7 @@ pub fn pre_process(path: &str, lines: &mut Vec<String>) -> Result<String, String
                 let spilt: Vec<&str> = line.split_whitespace().collect();
                 let spilt: Vec<String> = spilt.iter().map(|s| s.to_string()).collect();
 
+                //TODO Regex namespace to make sure it falls within the criteria.
                 if line.starts_with("#NAMESPACE") {
                     if spilt.len() == 2 {
                         if namespace.1 {
@@ -322,6 +323,7 @@ pub fn pre_process(path: &str, lines: &mut Vec<String>) -> Result<String, String
                     if spilt.len() >= 3 {
                         line.drain(0.."#DEFINE".len());
 
+                        //TODO Should this trim end?
                         let mut var = line.trim_start().to_string();
                         var.drain(0..spilt.get(1).unwrap().len());
                         let var = var.trim_start().to_string();
@@ -363,3 +365,19 @@ pub fn pre_process(path: &str, lines: &mut Vec<String>) -> Result<String, String
 
     Ok(namespace.0)
 }
+
+//TODO Compile.
+pub fn compile() -> Result<(Vec<Instructions>, HashMap<Tag, TagMap>), String> {
+    //let mut variables = HashMap::new(); // Hashmap to keep track of variable types.
+
+    Ok((Vec::new(), HashMap::new()))
+}
+
+//TODO Linker Check.
+// pub fn linker() {}
+
+//TODO Safety Checks.
+// pub fn safety_checks() {}
+
+//TODO Optimize.
+// pub fn optimize() {}

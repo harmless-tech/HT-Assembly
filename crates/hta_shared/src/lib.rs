@@ -150,21 +150,43 @@ impl traits::EnumWithU8 for Register {
 
 #[derive(Clone, Debug, PartialEq)]
 pub enum DataType {
-    Char(char),     // chr, Default: 0
-    String(String), // str, Default: ""
-    Int8(i8),       // i8, Default: 0
-    Int16(i16),     // i16, Default: 0
-    Int32(i32),     // Int, i32, Default: 0
-    Int64(i64),     // i64, Default: 0
-    Int128(i128),   // i128, Default: 0
-    UInt8(u8),      // u8, Default: 0
-    UInt16(u16),    // u16, Default: 0
-    UInt32(u32),    // UInt, u32, Default: 0
-    UInt64(u64),    // u64, Default: 0
-    UInt128(u128),  // u128, Default: 0
-    Float32(f32),   // f32, Default: 0.0
-    Float64(f64),   // Float, f64, Default: 0.0
-    Boolean(bool),  // bool, Default: false
+    Char(char),     // chr, char, Default: 0
+    String(String), // str, string, Default: ""
+    Int8(i8),       // i8, int8, Default: 0
+    Int16(i16),     // i16, int16, Default: 0
+    Int32(i32),     // int, i32, int32, Default: 0
+    Int64(i64),     // i64, int64, Default: 0
+    Int128(i128),   // i128, int128, Default: 0
+    UInt8(u8),      // u8, uint8, Default: 0
+    UInt16(u16),    // u16, uint16, Default: 0
+    UInt32(u32),    // uint, u32, uint32, Default: 0
+    UInt64(u64),    // u64, uint64, Default: 0
+    UInt128(u128),  // u128, uint128, Default: 0
+    Float32(f32),   // f32, float32, Default: 0.0
+    Float64(f64),   // float, f64, float64, Default: 0.0
+    Boolean(bool),  // bool, boolean, Default: false
+}
+impl DataType {
+    fn map(data_type: &str) -> Option<DataType> {
+        match data_type.to_lowercase().as_str() {
+            "chr" | "char" => Some(DataType::Char(0 as char)),
+            "str" | "string" => Some(DataType::String(String::new())),
+            "i8" | "int8" => Some(DataType::Int8(0)),
+            "i16" | "int16" => Some(DataType::Int16(0)),
+            "i32" | "int" | "int32" => Some(DataType::Int32(0)),
+            "i64" | "int64" => Some(DataType::Int64(0)),
+            "i128" | "int128" => Some(DataType::Int128(0)),
+            "u8" | "uint8" => Some(DataType::UInt8(0)),
+            "u16" | "uint16" => Some(DataType::UInt16(0)),
+            "u32" | "uint" | "uint32" => Some(DataType::UInt32(0)),
+            "u64" | "uint64" => Some(DataType::UInt64(0)),
+            "u128" | "uint128" => Some(DataType::UInt128(0)),
+            "f32" | "float32" => Some(DataType::Float32(0.0)),
+            "f64" | "float" | "float64" => Some(DataType::Float64(0.0)),
+            "bool" | "boolean" => Some(DataType::Boolean(false)),
+            _ => None,
+        }
+    }
 }
 impl traits::EnumWithU8 for DataType {
     fn to_u8(&self) -> u8 {

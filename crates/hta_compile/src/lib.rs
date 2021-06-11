@@ -123,9 +123,16 @@ pub fn compile(
         let v = handle.join().unwrap()?;
         p_files.push(v);
     }
+    p_files.insert(0, entry);
 
-    debug!("ENTRY: {:?}", entry.clone());
-    debug!("REST: {:?}", p_files.clone());
+    debug!("FILES: {:?}", p_files);
+
+    // let mut compile_threads = Vec::new();
+    // for file in p_files.iter() {
+    //     compile_threads.push(thread::spawn(move || {
+    //         Ok((FILE, NAMESPACE, INSTRUCTIONS, TAGS))
+    //     }));
+    // }
 
     //TODO
     // Process entry and other files
@@ -145,6 +152,11 @@ pub fn compile(
     Err("NOT IMPL".to_string())
 }
 
+//TODO
+// Write to a buffer then file.
+// Use compression?
+// Have a verify hash?
+// Allow for encryption?
 fn write_binary(
     data: &WriteData,
     debug_data: &Option<DebugData>,

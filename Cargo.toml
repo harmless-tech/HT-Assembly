@@ -17,6 +17,7 @@ license-file = "LICENSE"
 hta_shared = { path = "crates/hta_shared" }
 hta_compile = { path = "crates/hta_compile" }
 hta_runtime = { path = "crates/hta_runtime" }
+hta_std = { path = "crates/hta_std" }
 #toml = "0.5.8"
 #serde_json = "1.0.64"
 log = "0.4.14"

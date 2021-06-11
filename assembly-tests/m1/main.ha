@@ -51,7 +51,7 @@ NEWLINE:
 
 
       setreg $2 chr '\n';
-      call std.print;
+      // call std.print; TODO Later.
 
       setreg $0 str HELLO_STR;
       cast u32;
@@ -59,9 +59,10 @@ NEWLINE:
       regvar h_int;
       dealloc h_int;
 
-      alloc hello_slash str "Hello // World!"; // Remove me!
+      ALLOC hello_slash str "Hello // World!"; // Remove me!
       alloc hello u128 20,000; // Commas are allowed in numeric values.
 
-EXIT: exit 0;
+EXIT:
+    exit 0;
 
 //EXIT2: // This tag would error out, because it cannot link to an instruction.

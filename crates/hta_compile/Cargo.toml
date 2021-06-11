@@ -21,6 +21,6 @@ aho-corasick = "0.7.18"
 hta_shared = { path = "../hta_shared" }
 hta_std = { path = "../hta_std" }
 log = "0.4.14"
-regex = "1.5.3"
-regex_static = "0.1.1"
+regex = "1.5.4"
+lazy-regex = "2.2.1"
 seahash = "4.1.0"

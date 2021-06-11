@@ -61,6 +61,7 @@ Pre-Processors start with a #. They must be on their own line, and comments can 
   - DEFINE [NAME VALUES]
     - name VALUES :: none :: Replaces every instance of name with VALUES after it is defined. (NOT RECOMMEND) This can cause a lot of UB. :: #DEFINE HELLO_STR "Hello!"
 
+//TODO Should int and uint be 64 bit or 32 bit?
 Builtin Types:
 char, string, int8, int16, int32 (int), int64, int128, uint8 (byte), uint16, uint32 (uint), uint64, uint128, float32, float64 (float), boolean //, object, void. (Not in m1)
 chr , str   , i8  , i16  , i32 or int , i64  , i128  , u8 or byte  , u16   , u32 or uint  , u64   , u128   , f32    , f64 or float   , bool    //, obj   , void. (Not in m1)
