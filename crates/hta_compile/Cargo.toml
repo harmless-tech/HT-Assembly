@@ -8,13 +8,9 @@ documentation = "TODO URL"
 readme = "../../README.md"
 homepage = "TODO URL"
 repository = "https://github.com/harmless-tech/HT-Assembly"
-# license = "MIT License - Copyright (c) 2020 Harmless_Tech"
 license-file = "../../LICENSE"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
-#[lib]
-#crate-type = ["rlib", "staticlib", "dylib"]
 
 [dependencies]
 aho-corasick = "0.7.18"

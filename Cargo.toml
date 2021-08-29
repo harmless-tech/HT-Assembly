@@ -8,7 +8,6 @@ documentation = "TODO URL"
 readme = "README.md"
 homepage = "TODO URL"
 repository = "https://github.com/harmless-tech/HT-Assembly"
-# license = "MIT License - Copyright (c) 2020 Harmless_Tech"
 license-file = "LICENSE"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
@@ -18,8 +17,6 @@ hta_shared = { path = "crates/hta_shared" }
 hta_compile = { path = "crates/hta_compile" }
 hta_runtime = { path = "crates/hta_runtime" }
 hta_std = { path = "crates/hta_std" }
-#toml = "0.5.8"
-#serde_json = "1.0.64"
 log = "0.4.14"
 log4rs = "1.0.0"
 
