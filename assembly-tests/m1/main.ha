@@ -11,15 +11,15 @@
 */
 
 // /* /* If the line comment is removed this would fail to compile. */ */
-// Line comments are remove first.
+// Line comments are removed first.
 
 // !!! Entry File Only !!!
 #BUILD binary_name m1-test // Sets the name of the binary file.
 
 #INFO name Test                                // Name of the program
-#INFO authors Harmless_Tech                    // Authors of the program (Split using commas)
+#INFO authors Harmless_Tech                    // Authors of the program (Split using comma-space)
 #INFO version 0.0.1                            // Version of the program
-#INFO website harmless.tech                    // Website of the program  (https:// will be appended to the front)
+#INFO website harmless.tech/languages/ht-asm   // Website of the program  (https:// will be appended to the front)
 #INFO git github.com/harmless-tech/HT-Assembly // Git repo of the program (https:// will be appended to the front)
 #INFO license MIT                              // License of the program
 

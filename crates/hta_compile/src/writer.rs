@@ -13,7 +13,7 @@ pub fn header(file: &mut File, header: &str) -> Result<(), String> {
         hfs::error(file.by_ref().write_all(buffer))?;
     }
 
-    Err("Header too long! Must only be 8 bytes.".to_string())
+    Err("Header too long! Must only be a maximum of 8 bytes.".to_string())
 }
 
 pub fn version(file: &mut File, v: (u64, u64, u64)) -> Result<(), String> {

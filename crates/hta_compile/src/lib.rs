@@ -2,8 +2,10 @@ mod compiler;
 mod crafter;
 mod writer;
 
+//TODO Major rewrites are needed!
+
 use hta_shared::{hfs, version::parse_version_str, DebugData, MetaData, Program};
-use log::{debug, error, info, trace, warn};
+use log::{debug, error, info};
 use std::{
     fs,
     fs::File,
@@ -72,7 +74,7 @@ pub fn compile(
 
     // Process the entry file.
     let contents = file::intake(hta_file)?; // Import the entry file.
-    let contents = compiler::remove_comments(hta_file_name, contents)?; // Strip comments from entry file.
+    let contents = compiler::before::remove_comments(hta_file_name, contents)?; // Strip comments from entry file.
 
     // debug!("Size: {}", contents.clone().len());
     // debug!("REMOVE COMMENTS: \n{}", contents.clone());
@@ -83,7 +85,8 @@ pub fn compile(
         .collect();
 
     let mut write_data = WriteData::new(compiler_version);
-    let mut imports = compiler::pre_process_entry(&mut write_data, hta_file_name, &mut lines)?;
+    let mut imports =
+        compiler::before::pre_process_entry(&mut write_data, hta_file_name, &mut lines)?;
     imports.remove(0);
     let imports = imports;
 
@@ -102,20 +105,20 @@ pub fn compile(
 
         ns_threads.push(thread::spawn(move || {
             let f = file::intake(path.as_str())?;
-            let contents = compiler::remove_comments(file.as_str(), f)?;
+            let contents = compiler::before::remove_comments(file.as_str(), f)?;
 
             let mut lines: Vec<String> = contents
                 .split("\n")
                 .map(|s| String::from(s.trim()))
                 .collect();
-            let namespace = compiler::pre_process(file.as_str(), &mut lines)?;
+            let namespace = compiler::before::pre_process(file.as_str(), &mut lines)?;
 
             Ok((file, namespace, lines))
         }));
     }
 
     // Process entry on main thread.
-    let ns = compiler::pre_process(hta_file_name, &mut lines)?;
+    let ns = compiler::before::pre_process(hta_file_name, &mut lines)?;
     let mut entry = (hta_file_name.to_string(), ns, lines);
 
     let mut p_files = Vec::new();
