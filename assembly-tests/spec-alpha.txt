@@ -1,24 +1,13 @@
-//TODO Complete.
-//TODO Move to better format.
-//TODO This needs a rewrite.
+Spec Version: 0.0.1-alpha
 
 //
 This is the alpha language spec for HTA.
 Nothing here is final and info may be outdated.
-
-The compiler is currently missing many safety checks that will be added in the future.
-
-Compiling libraries that can be linked in later is currently not supported.
-Importing dlls/other libs to add more call functions is currently not supported.
 //
 
-The current goal of HTA is to make an assembly language that uses a runtime
-and that has the compiler do safety checks.
-
 File Types:
-Programming file: .ha
+Programming file: .hta
 Binary file     : .hab
-Snapshot file   : .hasnap //TODO This may be dropped.
 
 Processing Order:
     - Remove line comments.
@@ -31,82 +20,65 @@ Processing Order:
     - Parse and compile tags and instructions.
     - Check if links are all correct.
 
-//TODO Maybe?
 Entry:
-A program's entry point starts at the "ENTRY:" tag.
-The entry file also doubles has the project file.
+The file passed into the compiler will be the entry file and the runtime will start at the first instruction.
 
-Pre-Processors:
-Pre-Processors start with a #. They must be on their own line, and comments can only come after all values are defined.
-  - BUILD [ARG VALUES]:
-  Entry file only!
-    - binary_name VALUE :: main :: Sets the name of the compiled binary. :: #
-  - INFO [ARG VALUES]:
-  Entry file only!
-  Defines certain info about a HTA program. Not required.
-    - name    VALUE  :: main  :: Sets the name of the program.     :: #INFO name I'm a name!
-    - authors VALUES :: none  :: Sets the authors of the program.  :: #INFO authors HT, AA
-    - version VALUE  :: 1.0.0 :: Sets the version of the program.  :: #INFO version 1.0.0
-    - website VALUE  :: none  :: Sets the website of the program.  :: #INFO website harmless.tech                     (https:// is added by the compiler)
-    - git     VALUE  :: none  :: Sets the git repo of the program. :: #INFO git github.com/harmless-tech/HT-Assembly  (https:// is added by the compiler)
-    - license VALUES :: none  :: Sets the license of the program.  :: #INFO license MIT
-  - REQUIRE [ARG VALUES]:
-  Entry file only!
-  Imposes requirements on the HTA file. Not required, but highly suggested.
-    - hta_version VERSION MAJOR.MINOR.PATCH :: COMPILER_VERSION :: Sets the required or greater HTA version to compile this program. :: #REQUIRE hta_version 0.0.1
-  - IMPORT FILE_NAME :: NO DEFAULT :: Tells the compiler to compile another file from which elements are required from. Makes it accessible to the whole project. :: #IMPORT structs.ha OR #IMPORT add.ha
-  Entry file only!
-  - NAMESPACE NAME :: NAME_OF_FILE :: Sets the namespace to which all tags and vars in the file will have. :: #NAMESPACE ht
-  This would add the namespace onto the tags and vars in the file. This allows for them to be accessed from other files.
-  - DEFINE [NAME VALUES]
-    - name VALUES :: none :: Replaces every instance of name with VALUES after it is defined. (NOT RECOMMEND) This can cause a lot of UB. :: #DEFINE HELLO_STR "Hello!"
+Pre-Processor:
+Starts with # and must be on their own line. (Comments can come after)
+    - INFO [TAG] [VALUE] :: Allows info to be added to the program.
+        - name    :: Name of the program. (And maybe the output file)
+        - authors :: Authors of the program. (Split using comma-space)
+        - version :: Program version.
+        - website :: Website of the program. (https:// will be applied to the front)
+        - git     :: Repo of the program. (https:// will be applied to the front)
+        - license :: Program license.
+    - REQUIRE [INTEGRATION_NAME] :: Makes sure the compiler and runtime are using this integration.
+    - PULL [FILE] :: Pulls the file into the program. Does not block repeating files and will insert them on whatever line this is on.
 
-//TODO Should int and uint be 64 bit or 32 bit?
 Builtin Types:
-char, string, int8, int16, int32 (int), int64, int128, uint8 (byte), uint16, uint32 (uint), uint64, uint128, float32, float64 (float), boolean //, object, void. (Not in m1)
-chr , str   , i8  , i16  , i32 or int , i64  , i128  , u8 or byte  , u16   , u32 or uint  , u64   , u128   , f32    , f64 or float   , bool    //, obj   , void. (Not in m1)
+char, string, int8, int16, int32, int64 (int), int128, uint8 (byte), uint16, uint32, uint64 (uint), uint128, float32, float64 (float), boolean
+chr , str   , i8  , i16  , i32  , i64 or int , i128  , u8 or byte  , u16   , u32   , u64 or unit  , u128   , f32    , f64 or float   , bool
 All builtin types can be cast to each other.
-All types use big endian.
-If a type being casted is bigger then the value can hold, then the value will be reduced to the largest possible value.
 
 Registers:
-There are only three registers for HTA. Registers start out has 0_u32.
-  - $0 :: Op register 0   :: Read/Write
-  - $1 :: Op register 1   :: Read/Write
-  - $2 :: Return register :: The return register is the default register where all operations are return to and where several commands read from.
-//TODO Add more registers that are just for storing/reading data?
-
-Structs:
-//TODO Not in milestone/mark 1/m1.
+There are only three registers for HTA. Registers start out has 0_u64.
+    - $0 :: Op register 0   :: Read/Write
+    - $1 :: Op register 1   :: Read/Write
+    - $2 :: Return register :: The return register is the default register where all operations are return to and where several commands read from.
+    - $3 :: Op register 3   :: Read/Write
+    - $4 :: Op register 4   :: Read/Write
+    - $5 :: Op register 5   :: Read/Write
+    - $6 :: Op register 6   :: Read/Write
+    - $7 :: Op register 7   :: Read/Write
+    - $8 :: Op register 8   :: Read/Write
+    - $9 :: Op register 9   :: Read/Write
 
 Tags:
-Allows a program to jump to that location. Must be on their own line.
-  - TAG_NAME:
+Allows a program to jump to that location.
+    - TAG_NAME:
 
 Commands:
-  - alloc NAME TYPE DATA(OPTIONAL)  :: Allocates a variable of a certain type. Variables can never be null.
-  - dealloc NAME                    :: DeAllocates a variable. If the variable does not exist then nothing happens.
-  - setvar NAME DATA                :: Sets a variable to the inserted data. (Data must match variable type.)
-  - regvar NAME                     :: Takes the return register and places it into a variable.
-  - setreg REG TYPE DATA(OPTIONAL)  :: Sets a register to the inserted data.
-  - varreg NAME REG                 ::
-  - cpyreg REG REG                  ::
-  - op OP                           ::
-  - jmp TAG                         :: Jumps if $2 is a true value.
-  - pushjmp TAG                     :: Jumps if $2 is a true value. Saves the jmp point.
-  - popjmp                          :: Pops a jmp. Only happens if there is a jmp in the stack.
-  - cast NEW_TYPE                   :: Casts $0 to the new type and puts it into $2.
-  - call NATIVE_NAME NATIVE_ARGS    :: NATIVE_ARGS does nothing in m1. For now just passes the register values. Puts something in the return register, if it wants to.
-  - exit INT(OPTIONAL)              :: Exits the program with a return code. If there is no return code, exits the program using $2.
-  - assert OPTIONAL_ARG             :: Asserts the return register is equal to the OPTIONAL_ARG, or asserts that the return register is true. Only in debug builds.
-
+    - alloc NAME TYPE DATA(OPTIONAL)  :: Allocates a variable of a certain type. Variables can never be null.
+    - dealloc NAME                    :: DeAllocates a variable. If the variable does not exist then nothing happens.
+    - setvar NAME DATA                :: Sets a variable to the inserted data. (Data must match variable type.)
+    - regvar REG NAME                 :: Takes the register and places it into a variable.
+    - setreg REG TYPE DATA(OPTIONAL)  :: Sets a register to the inserted data.
+    - varreg NAME REG                 :: Takes the variable and places it into a register.
+    - cpyreg REG REG                  :: Copies a register to a register.
+    - op OP                           :: Does an operation on $0 and $1.
+    - jmp TAG                         :: Jumps if $2 is a true value.
+    - pushjmp TAG                     :: Jumps if $2 is a true value. Pushes jmp to stack.
+    - popjmp                          :: Pops a jmp. Only happens if there is a jmp in the stack.
+    - cast NEW_TYPE                   :: Casts $0 to the new type and puts it into $2.
+    - call FUNCTION FUNCTION_ARGS     :: Calls an 'external' function.
+    - exit INT(OPTIONAL)              :: Exits the program with a return code. If there is no return code, exits the program using value in $2.
+    - assert OPTIONAL_ARG             :: Asserts the return register is equal to the OPTIONAL_ARG, or asserts that the return register is true. Only in debug builds.
 
 Operations:
-  - Logic: !, &&, ||
-  - Arith: +, -, *, /, %, ++, --
-  - Rel: ==, !=, >, <, >=, <=
-  - BitWise: &, |, ^, ~, << u64, >> u64 // u64 defaults to 1. //TODO Bitwise not in m1.
+    - Logic: !, &&, ||
+    - Arith: +, -, *, /, %, ++, --
+    - Rel: ==, !=, >, <, >=, <=
+    - BitWise: &, |, ^, ~, << $1, >> $1
 
-Natives: //TODO Not in m1.
-Natives will be loaded using dynamic libraries. All loaded natives must have their own namespace.
-Their namespace can conflict with the namespace of the HTA program.
+Integrations:
+Integrations allow more instructions or functions to be added.

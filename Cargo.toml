@@ -5,7 +5,7 @@ authors = ["harmless-tech"]
 edition = "2021"
 description = "An open source assembly language that uses a runtime."
 readme = "README.md"
-homepage = "TODO URL"
+homepage = "https://harmless.tech/languages/ht-asm"
 repository = "https://github.com/harmless-tech/HT-Assembly"
 license = "MIT"
 

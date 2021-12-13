@@ -1,0 +1,18 @@
+// !!! Entry File Only !!!
+#INFO name test                                // Name of the program (Maybe used for the output file too)
+#INFO authors Harmless_Tech, n/a               // Authors of the program (Split using comma-space)
+#INFO version 0.0.1                            // Version of the program
+#INFO website harmless.tech/languages/ht-asm   // Website of the program  (https:// will be appended to the front)
+#INFO git github.com/harmless-tech/HT-Assembly // Git repo of the program (https:// will be appended to the front)
+#INFO license MIT                              // License of the program
+
+#REQUIRE std
+
+#IMPORT add/add.hta
+#IMPORT add/sub.hta
+
+dealloc sub
+
+call std.print // Prints out return register.
+
+exit

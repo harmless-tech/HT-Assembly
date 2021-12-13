@@ -8,4 +8,7 @@ logs/
 crates/*/target/
 crates/*/Cargo.lock
 
+*.tmp
+*.temp
+
 .DS_Store
