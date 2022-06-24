@@ -1,9 +1,11 @@
-pub mod hfs;
-pub mod traits;
-pub mod version;
+// pub mod hfs;
+// pub mod traits;
+// pub mod version;
 
 use log::error;
 use std::collections::HashMap;
+
+use crate::old::traits;
 
 pub static FILE_EXT_CODE: &str = ".ha"; // File extension for code files.
 pub static FILE_EXT_BINARY: &str = ".hab"; // File extension for built binary files.

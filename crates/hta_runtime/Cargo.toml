@@ -14,4 +14,4 @@ license = "MIT"
 [dependencies]
 hta_shared = { path = "../hta_shared" }
 hta_std = { path = "../hta_std" }
-log = "0.4.14"
+log = "0.4.17"

@@ -1,7 +1,9 @@
 #![allow(dead_code)] //TODO Remove!
 
-use hta_shared::{
-    hfs, traits::EnumWithU8, DataType, DebugData, Instructions, MetaData, Program, Tag, TagMap,
+use hta_shared::old::{
+    hfs,
+    lib::{DataType, DebugData, Instructions, MetaData, Program, Tag, TagMap},
+    traits::EnumWithU8,
 };
 use std::{collections::HashMap, fs::File, io::Write};
 

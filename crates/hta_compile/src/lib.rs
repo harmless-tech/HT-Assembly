@@ -4,7 +4,13 @@ mod writer;
 
 //TODO Major rewrites are needed!
 
-use hta_shared::{hfs, version::parse_version_str, DebugData, MetaData, Program};
+use hta_shared::{
+    old::{
+        hfs,
+        lib::{DebugData, MetaData, Program},
+    },
+    version::parse_version_str,
+};
 use log::{debug, error, info};
 use std::{
     fs,
@@ -171,7 +177,7 @@ fn write_binary(
         "{}{}{}",
         BINARY_PATH,
         data.build_data.0,
-        hta_shared::FILE_EXT_BINARY
+        hta_shared::old::lib::FILE_EXT_BINARY
     );
     let mut file = File::create(PathBuf::from(path.clone()))
         .expect("Could not create a binary file to write to!");

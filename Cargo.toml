@@ -16,8 +16,8 @@ hta_shared = { path = "crates/hta_shared" }
 hta_compile = { path = "crates/hta_compile" }
 hta_runtime = { path = "crates/hta_runtime" }
 hta_std = { path = "crates/hta_std" }
-log = "0.4.14"
-log4rs = "1.0.0"
+log = "0.4.17"
+log4rs = "1.1.1"
 
 [workspace]
 members = ["crates/*"]

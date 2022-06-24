@@ -31,7 +31,7 @@ pub fn setup_log(debug: bool) -> log4rs::Handle {
         )))
         .build();
 
-    let fileout: FileAppender = FileAppender::builder()
+    let file_out: FileAppender = FileAppender::builder()
         .encoder(Box::new(PatternEncoder::new(
             "{h({d(%H:%M:%S)(local)} - {l}: {m}{n})}",
         )))
@@ -40,7 +40,7 @@ pub fn setup_log(debug: bool) -> log4rs::Handle {
 
     let config: Config = Config::builder()
         .appender(Appender::builder().build("stdout", Box::new(stdout)))
-        .appender(Appender::builder().build("fileout", Box::new(fileout)))
+        .appender(Appender::builder().build("fileout", Box::new(file_out)))
         .logger(Logger::builder().build("app::backend::db", LevelFilter::Trace))
         .logger(
             Logger::builder()
@@ -62,7 +62,7 @@ pub fn setup_log(debug: bool) -> log4rs::Handle {
         info!("Previous log file deleted.")
     }
     else {
-        warn!("Previous log file could not be deleted. This could become a problem if the log file gets very long.")
+        warn!("Previous log file could not be deleted. This could become a problem if the log file gets very big.")
     }
 
     return handle;

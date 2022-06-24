@@ -15,7 +15,7 @@ license = "MIT"
 aho-corasick = "0.7.18"
 hta_shared = { path = "../hta_shared" }
 hta_std = { path = "../hta_std" }
-log = "0.4.14"
-regex = "1.5.4"
-lazy-regex = "2.2.2"
+log = "0.4.17"
+regex = "1.5.6"
+lazy-regex = "2.3.0"
 ahash = "0.7.6"

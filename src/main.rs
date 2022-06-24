@@ -9,7 +9,7 @@ const DEBUG_BUILD: bool = true;
 #[cfg(not(debug_assertions))]
 const DEBUG_BUILD: bool = false;
 
-//TODO Allow for optional args. (--binary)
+//TODO Allow for optional args.
 //TODO Built in formatter?
 fn main() {
     let mut args = std::env::args();
@@ -66,8 +66,8 @@ fn main() {
 
     //TODO Remove!
     match hta_compile::compile(
-        "assembly-tests/m1/main.ha",
-        "main.ha",
+        "assembly-tests/m1/main.hta",
+        "main.hta",
         "assembly-tests/m1",
         debug,
     ) {

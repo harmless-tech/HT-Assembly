@@ -1,6 +1,6 @@
 pub mod before;
 
-use hta_shared::{Instructions, Tag, TagMap};
+use hta_shared::old::lib::{Instructions, Tag, TagMap};
 use std::collections::HashMap;
 
 fn err_message<T>(file_name: &str, line_num: usize, message: &str) -> Result<T, String> {
